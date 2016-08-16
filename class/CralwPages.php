@@ -18,31 +18,37 @@ class CralwPages {
      */
     private $wpdb;
 
+    /**
+     *
+     * @var string
+     */
+    private $tabnam;
 
     /**
      * 
-     * @param wpdb $wpdb
+     * @global wpdb $wpdb
      */
-    public function __construct(wpdb $wpdb) {
+    public function __construct() {
+        global $wpdb;
         $this->wpdb = $wpdb;
-        
-        
+        $prefix = $this->wpdb->prefix;
+        $this->tabnam = $prefix.'seo_summary_links';
     }
     
+    
+    
     /**
+     * Activate plugin
      * 
-     * @param wpdb $wpdb
+     * @global wpdb $wpdb
      */
     public function install(){
-        $prefix = $this->wpdb->prefix;
-        $tabnam = $prefix.'seo_summary_links';
-        
         $version = '0.1';
         
-        if ($this->wpdb->get_var("SHOW TABLES LIKE  '$tabnam'") != $tabnam) {
+        if ($this->wpdb->get_var("SHOW TABLES LIKE  '".$this->tabnam."'") != $this->tabnam) {
             
             //create
-            $query = "CREATE TABLE $tabnam ("
+            $query = "CREATE TABLE ".$this->tabnam." ("
                     . " ID int(9) NOT NULL AUTO_INCREAMENT,"
                     . " sitemap VARCHAR(50)  NOT NULL,"
                     . " url VARCHAR(250) NOT NULL,"
@@ -56,6 +62,16 @@ class CralwPages {
             add_option('seo-summary_speed', '2000');
             add_option('seo-summary_type', 'vertical');
         }
+    }
+    
+    /**
+     * Deactivate plugin
+     * 
+     * @global wpdb $wpdb
+     */
+    public function uninstall() {
+        $query ='DROP TABLE '.$this->tabnam;
+        $this->wpdb->query($query);
     }
 
 }

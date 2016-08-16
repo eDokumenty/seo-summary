@@ -12,12 +12,18 @@ require_once __DIR__.'/class/CralwPages.php';
 /**
  * Hook activation plugin
  */
-register_activation_hook(__FILE__, function(){
-    global $wpdb;
-    $seo = new CralwPages($wpdb);
-
+register_activation_hook(__FILE__, function() {
+    $seo = new CralwPages();
+    $seo->install();
 });
 
+/**
+ * Hook deactivation plugin
+ */
+register_deactivation_hook(__FILE__, function() {
+    $seo = new CralwPages();
+    $seo->uninstall();
+});
 
 
 /*
@@ -48,6 +54,15 @@ function seo_summary_setup_menu(){
     //Init cralw pages
     add_submenu_page( 'seo-summary', 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
 
+        $url = get_bloginfo('url').'/sitemap_index.xml';
+        
+        try{
+            $xml = simplexml_load_string(file_get_contents($url));
+        }
+        catch(Exception $e) {
+            echo 'Nie znaleziono strony: '.$url;
+            return;
+        }
         ?>
         <div id="seo-summary">
             <form method="GET">
