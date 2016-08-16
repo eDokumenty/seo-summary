@@ -59,8 +59,11 @@
         foreach( $data as $row ){
             foreach ( $row as $k => $v ){
                 if( $i < 1 ){
-                    if ($k == 'post_title'){
+                    if ( $k == 'post_title' ){
                         echo '<th class="seo_table_th"> SEO </th>';
+                    }
+                    if ( $k == 'post_type' ){
+                        echo '<th class="seo_table_th"> Typ postu </th>';
                     }
                 }
             }   
@@ -73,13 +76,13 @@
      */
     function seo_init(){ ?>
     <div id="seo_summary">
+        <h1 class="plugin_title">SEO Summary</h1>
         <form class="form-plugin" name="formularz" method="get">        
             <?php
-            $query = "SELECT p.post_title, p.post_name, p.ID, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key ='_yoast_wpseo_metadesc') WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci') AND p.post_status = 'publish' ORDER BY `p`.`post_name` ASC";
-            global $wpdb;
-            $data = $wpdb->get_results($query);
+                $query = "SELECT p.post_title, p.post_name, p.ID, p.post_type, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key ='_yoast_wpseo_metadesc') WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci') AND p.post_status = 'publish' ORDER BY `p`.`post_name` ASC";
+                global $wpdb;
+                $data = $wpdb->get_results($query);
             ?>
-
             <table class="wp-list-table widefat fixed striped posts seo-table">
                 <thead>
                     <?php write_headlines ($data); ?>
@@ -103,6 +106,7 @@
                                 $url = home_url() . '/' . $row->post_name;
                                 $r['url'] = $url;
                                 $r['ID'] = $row->ID;
+                                $r['post_type'] = $row->post_type;
                             }
                             $r[$row->meta_key] = $row->meta_value;
                         }
@@ -110,17 +114,14 @@
                         $ile = 0;
                         foreach ($a as $row){
                             echo '<tr><td><input id="p' . $ile . '" type="checkbox"></td><td class="google-link">';
-                            foreach ($row as $k => $v){
-                                if( !empty($k) ){
-                                    if ($k == 'post_title'){
-                                        $v = '<a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['post_title'] . '</a>';
-                                    }
-                                    if ($k != 'ID'){
-                                        echo '<div class="'. $k .'">' . $v . '</div>';
-                                    }
-                                }
-                            }
-                            echo '</td></tr>';
+                            
+                            echo '<div class="post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['post_title'] . '</a></div>';
+                            echo '<div class="url">' . $row['url'] . '</div>';
+                            echo '<div class="_yoast_wpseo_metadesc">' . $row['_yoast_wpseo_metadesc'] . '</div>';
+                            
+                            echo '</td>'
+                            . '<td>' . $row['post_type'] . '</td>'
+                            . '</tr>';
                             $ile++;
                         }
                         numbers_of_items($ile);
