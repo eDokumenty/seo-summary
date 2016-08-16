@@ -7,7 +7,7 @@
  */
 
 
-require_once __DIR__.'/class/CralwPages.php';
+require_once __DIR__.'/class/CrawlPages.php';
 
 /**
  * Hook activation plugin

@@ -4,7 +4,7 @@ $content = file_get_contents($url);
 $xml = simplexml_load_string($content);
 if (!$xml) {
     echo '<b>Failed loading XML with url:</b> ' . $url;
-   // return;
+    return;
 }
 
 ?>
