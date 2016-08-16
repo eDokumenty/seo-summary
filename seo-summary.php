@@ -55,48 +55,14 @@ function seo_summary_setup_menu(){
     add_submenu_page( 'seo-summary', 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
 
         $url = get_bloginfo('url').'/sitemap_index.xml';
-        
-        try{
-            $xml = simplexml_load_string(file_get_contents($url));
-        }
-        catch(Exception $e) {
-            echo 'Nie znaleziono strony: '.$url;
-            return;
-        }
-        ?>
-        <div id="seo-summary">
-            <form method="GET">
-                <table class="wp-list-table widefat fixed striped posts seo-table">
-                    <thead>
-                        <tr>
-                            <td class="checkbox-col">
-                                <input id="all" class="checkbox-td all" type="checkbox" onclick=Zaznacz()>
-                            </td>
-                            <td>
-                                Nazwa mapy strony
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-
-
-
-                        ?>
-                    </tbody>
-                    <tfoot>
-                         <tr>
-                            <td class="checkbox-col">
-                                <input id="all" class="checkbox-td all" type="checkbox" onclick=Zaznacz()>
-                            </td>
-                            <td>
-                                Nazwa mapy strony
-                            </td>
-                        </tr>
-                    </tfoot>
-            </form>
-        </div>
-        <?php
+        if (isset($_GET['cralw']) && $_GET['cralw'] == 'true')  {
+            
+        }else {
+            /**
+             * Render form Cralw Pages
+             */
+            require __DIR__.'/cralw-form.php';
+        } 
     } );
 }
 add_action('admin_menu', 'seo_summary_setup_menu');
