@@ -18,32 +18,60 @@ class CralwPages {
      */
     private $wpdb;
 
+    /**
+     *
+     * @var string
+     */
+    private $tabnam;
 
     /**
      * 
-     * @param wpdb $wpdb
+     * @global wpdb $wpdb
      */
-    public function __construct(wpdb $wpdb) {
+    public function __construct() {
+        global $wpdb;
         $this->wpdb = $wpdb;
+        $prefix = $this->wpdb->prefix;
+        $this->tabnam = $prefix.'seo_summary_links';
+    }
+    
+    
+    
+    /**
+     * Activate plugin
+     * 
+     * @global wpdb $wpdb
+     */
+    public function install(){
+        $version = '0.1';
+        
+        if ($this->wpdb->get_var("SHOW TABLES LIKE  '".$this->tabnam."'") != $this->tabnam) {
+            
+            //create
+            $query = "CREATE TABLE ".$this->tabnam." ("
+                    . " ID int(9) NOT NULL AUTO_INCREAMENT,"
+                    . " sitemap VARCHAR(50)  NOT NULL,"
+                    . " url VARCHAR(250) NOT NULL,"
+                    . " content_url VARCHAR(250) NOT NULL,"
+                    . " PRIMARY KEY (ID) "
+                    . ")";
+            
+            $this->wpdb->query($query);
+            
+            add_option('seo-summary_version', $version);
+            add_option('seo-summary_speed', '2000');
+            add_option('seo-summary_type', 'vertical');
+        }
     }
     
     /**
+     * Deactivate plugin
      * 
-     * @param wpdb $wpdb
+     * @global wpdb $wpdb
      */
-    public function install(){
-        $prefix = $this->wpdb->prefix;
-
+    public function uninstall() {
+        $query ='DROP TABLE '.$this->tabnam;
+        $this->wpdb->query($query);
     }
 
-    /**
-     * 
-     * @param string $parent_slug
-     */
-    public function addSubMenu($parent_slug) {
-        add_submenu_page($parent_slug, 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
-           
-            echo "<h1>Test</h1>";
-        } );
-    }
 }

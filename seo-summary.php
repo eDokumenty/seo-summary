@@ -1,51 +1,84 @@
 <?php
-    /*
-     * Plugin Name: SEO Summary
-     * Author: Klaudia Wasilewska
-     * Description: Wtyczka kontrolująca ilość linków na stronie/poście
-     * Version: 0.1
-     */
+/*
+ * Plugin Name: SEO Summary
+ * Author: Klaudia Wasilewska
+ * Description: Wtyczka kontrolująca ilość linków na stronie/poście
+ * Version: 0.1
+ */
 
-    /*
-     * Add css
-     */
-    function add_css (){
-        wp_register_style('seo-summary', plugins_url('/style.css', __FILE__));
-        wp_enqueue_style('seo-summary');
-    }
-    add_action('init', 'add_css');
-    /*
-     * Add JS
-     */
-    function add_js() {
-        wp_register_script('seo', plugins_url('/script.js', __FILE__), array('jquery'));
-        wp_register_script('easing', plugins_url('/script.js', __FILE__), array('jquery'));
-        wp_enqueue_script('seo');
-        wp_enqueue_script('easing');
-    }
-    add_action('init', 'add_js');
-    
-    /*
-     * Add plugin to the Wordpress menu
-     */
-    function seo_summary_setup_menu(){
-            add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init' );
-    }
-    add_action('admin_menu', 'seo_summary_setup_menu');
-    
-    /*
-     * This function counts all articles in the table
-     */
-    function numbers_of_items($ile){
-        echo '<div class="number-items tablenav number_record">';
-        if($ile == 1){
-            echo $ile . ' element';
-        }else if($ile >1 && $ile <5){
-            echo $ile . ' elementy';
-        }else{
-            echo $ile . ' elementów';
+
+require_once __DIR__.'/class/CralwPages.php';
+
+/**
+ * Hook activation plugin
+ */
+register_activation_hook(__FILE__, function() {
+    $seo = new CralwPages();
+    $seo->install();
+});
+
+/**
+ * Hook deactivation plugin
+ */
+register_deactivation_hook(__FILE__, function() {
+    $seo = new CralwPages();
+    $seo->uninstall();
+});
+
+
+/*
+ * Add css
+ */
+function add_css (){
+    wp_register_style('seo-summary', plugins_url('/style.css', __FILE__));
+    wp_enqueue_style('seo-summary');
+}
+add_action('init', 'add_css');
+/*
+ * Add JS
+ */
+function add_js() {
+    wp_register_script('seo', plugins_url('/script.js', __FILE__), array('jquery'));
+    wp_register_script('easing', plugins_url('/script.js', __FILE__), array('jquery'));
+    wp_enqueue_script('seo');
+    wp_enqueue_script('easing');
+}
+add_action('init', 'add_js');
+
+/*
+ * Add plugin to the Wordpress menu
+ */
+function seo_summary_setup_menu(){
+    add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init' );
+
+    //Init cralw pages
+    add_submenu_page( 'seo-summary', 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
+
+        $url = get_bloginfo('url').'/sitemap_index.xml';
+        
+        try{
+            $xml = simplexml_load_string(file_get_contents($url));
         }
-        echo '</div>';
+        catch(Exception $e) {
+            echo 'Nie znaleziono strony: '.$url;
+            return;
+        }
+        
+    } );
+}
+add_action('admin_menu', 'seo_summary_setup_menu');
+
+/*
+ * This function counts all articles in the table
+ */
+function numbers_of_items($ile){
+    echo '<div class="number-items tablenav number_record">';
+    if($ile == 1){
+        echo $ile . ' element';
+    }else if($ile >1 && $ile <5){
+        echo $ile . ' elementy';
+    }else{
+        echo $ile . ' elementów';
     }
     /*
      * It writes a headlines in the table
@@ -66,15 +99,16 @@
                         echo '<th class="seo_table_th"> Typ postu </th>';
                     }
                 }
-            }   
-        echo '</tr>';
-        $i++;
-        }
+            }
+        }   
+    echo '</tr>';
+    $i++;
     }
-    /*
-     * Main function
-     */
-    function seo_init(){ ?>
+}
+/*
+ * Main function
+ */
+function seo_init(){ ?>
     <div id="seo_summary">
         <h1 class="plugin_title">SEO Summary</h1>
         <form class="form-plugin" name="formularz" method="get">        
