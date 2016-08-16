@@ -74,7 +74,7 @@
     function seo_init(){ ?>
     <form class="form-plugin" name="formularz" method="get">        
         <?php
-        $query = "SELECT p.post_title, p.post_name, p.ID, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key ='_yoast_wpseo_metadesc') WHERE p.post_type in ('post', 'page', 'rozwiazania') AND p.post_status = 'publish' ORDER BY `p`.`post_name` ASC";
+        $query = "SELECT p.post_title, p.post_name, p.ID, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key ='_yoast_wpseo_metadesc') WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci') AND p.post_status = 'publish' ORDER BY `p`.`post_name` ASC";
         global $wpdb;
         $data = $wpdb->get_results($query);
         ?>
