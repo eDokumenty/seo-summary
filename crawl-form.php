@@ -9,7 +9,7 @@ if (!$xml) {
 
 ?>
 <div id="seo-summary">
-    <form action="<?php echo get_bloginfo('url'); ?>/wp-admin/admin.php?page=cralw-pages&cralw=true" method="post" class="form-plugin" name="formularz" action>
+    <form action="<?php echo get_bloginfo('url'); ?>/wp-admin/admin.php?page=crawl-pages&crawl=true" method="post" class="form-plugin" name="formularz" action>
         <input type="submit" value="Indeksuj" />
         <table class="wp-list-table widefat fixed striped posts seo-table">
             <thead>
@@ -46,6 +46,6 @@ if (!$xml) {
                 </tr>
             </tfoot>
     </form>
-    <input type="submit" value="Indeksuj" />
+    <input type="submit" onclick="Zaznacz()" value="Indeksuj wszystko" />
 </div>
 <?php

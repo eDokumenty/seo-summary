@@ -52,17 +52,17 @@ function seo_summary_setup_menu(){
     add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init' );
 
     //Init cralw pages
-    add_submenu_page( 'seo-summary', 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
+    add_submenu_page( 'seo-summary', 'Crawl pages', 'Crawl pages',  'manage_options', 'crawl-pages', function() {
 
         $url = get_bloginfo('url').'/sitemap_index.xml';
 
-        if (isset($_GET['cralw']) && $_GET['cralw'] == 'true')  {
+        if (isset($_GET['crawl']) && $_GET['crawl'] == 'true')  {
             
         }else {
             /**
              * Render form Cralw Pages
              */
-            require __DIR__.'/cralw-form.php';
+            require __DIR__.'/crawl-form.php';
         } 
 
     } );

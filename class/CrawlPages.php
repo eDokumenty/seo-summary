@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of CralwPages
+ * Description of CrawlPages
  * 
  * @package SEO Summary
  * @since 
@@ -10,7 +10,7 @@
  * @license gpl
  * @copyright (c) eDokumenty Sp. z o.o
  */
-class CralwPages {
+class CrawlPages {
 
     /**
      *
