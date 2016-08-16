@@ -6,6 +6,9 @@
      * Version: 0.1
      */
 
+
+    require_once __DIR__.'/class/CralwPages.php';
+     
     /*
      * Add css
      */
@@ -29,7 +32,17 @@
      * Add plugin to the Wordpress menu
      */
     function seo_summary_setup_menu(){
-            add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init' );
+        add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init' );
+        add_submenu_page( 'seo-summary', 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
+           
+            ?>
+            <div id="seo-summary">
+                <form method="GET">
+                    
+                </form>
+            </div>
+            <?php
+        } );
     }
     add_action('admin_menu', 'seo_summary_setup_menu');
     

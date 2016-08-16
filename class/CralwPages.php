@@ -25,6 +25,8 @@ class CralwPages {
      */
     public function __construct(wpdb $wpdb) {
         $this->wpdb = $wpdb;
+        
+        
     }
     
     /**
@@ -34,16 +36,7 @@ class CralwPages {
     public function install(){
         $prefix = $this->wpdb->prefix;
 
+        
     }
 
-    /**
-     * 
-     * @param string $parent_slug
-     */
-    public function addSubMenu($parent_slug) {
-        add_submenu_page($parent_slug, 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
-           
-            echo "<h1>Test</h1>";
-        } );
-    }
 }
