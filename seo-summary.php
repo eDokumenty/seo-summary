@@ -84,12 +84,13 @@ function numbers_of_items($ile){
     /*
      * It writes a headlines in the table
      */
+}
     function write_headlines ($data){
         echo '<tr>
         <td class="checkbox-col">
-            <input id="all" class="checkbox-td all" type="checkbox">
+            <input id="all" class="checkbox-td all" type="checkbox" onclick="Zaznacz()">
         </td>';
-        $i =0;
+        $i = 0;
         foreach( $data as $row ){
             foreach ( $row as $k => $v ){
                 if( $i < 1 ){
@@ -101,11 +102,11 @@ function numbers_of_items($ile){
                     }
                 }
             }
-        }   
-    echo '</tr>';
-    $i++;
+            echo '</tr>';
+            $i++;
+        }
     }
-}
+
 /*
  * Main function
  */
@@ -114,7 +115,7 @@ function seo_init(){ ?>
         <h1 class="plugin_title">SEO Summary</h1>
         <form class="form-plugin" name="formularz" method="get">        
             <?php
-                $query = "SELECT p.post_title, p.post_name, p.ID, p.post_type, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key ='_yoast_wpseo_metadesc') WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci') AND p.post_status = 'publish' ORDER BY `p`.`post_name` ASC";
+                $query = "SELECT p.post_title, p.post_name, p.ID, p.post_type, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key ='_yoast_wpseo_metadesc') WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci') AND p.post_status = 'publish' ORDER BY p.post_type ASC, `p`.`post_name` ASC";
                 global $wpdb;
                 $data = $wpdb->get_results($query);
             ?>
