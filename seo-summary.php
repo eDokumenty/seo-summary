@@ -1,90 +1,130 @@
 <?php
-    /*
-     * Plugin Name: SEO Summary
-     * Author: Klaudia Wasilewska
-     * Description: Wtyczka kontrolująca ilość linków na stronie/poście
-     * Version: 0.1
-     */
+/*
+ * Plugin Name: SEO Summary
+ * Author: Klaudia Wasilewska
+ * Description: Wtyczka kontrolująca ilość linków na stronie/poście
+ * Version: 0.1
+ */
 
 
-    require_once __DIR__.'/class/CralwPages.php';
-     
-    /*
-     * Add css
-     */
-    function add_css (){
-        wp_register_style('seo-summary', plugins_url('/style.css', __FILE__));
-        wp_enqueue_style('seo-summary');
+require_once __DIR__.'/class/CralwPages.php';
+
+/**
+ * Hook activation plugin
+ */
+register_activation_hook(__FILE__, function(){
+    global $wpdb;
+    $seo = new CralwPages($wpdb);
+
+});
+
+
+
+/*
+ * Add css
+ */
+function add_css (){
+    wp_register_style('seo-summary', plugins_url('/style.css', __FILE__));
+    wp_enqueue_style('seo-summary');
+}
+add_action('init', 'add_css');
+/*
+ * Add JS
+ */
+function add_js() {
+    wp_register_script('seo', plugins_url('/script.js', __FILE__), array('jquery'));
+    wp_register_script('easing', plugins_url('/script.js', __FILE__), array('jquery'));
+    wp_enqueue_script('seo');
+    wp_enqueue_script('easing');
+}
+add_action('init', 'add_js');
+
+/*
+ * Add plugin to the Wordpress menu
+ */
+function seo_summary_setup_menu(){
+    add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init' );
+
+    //Init cralw pages
+    add_submenu_page( 'seo-summary', 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
+
+        ?>
+        <div id="seo-summary">
+            <form method="GET">
+                <table class="wp-list-table widefat fixed striped posts seo-table">
+                    <thead>
+                        <tr>
+                            <td class="checkbox-col">
+                                <input id="all" class="checkbox-td all" type="checkbox" onclick=Zaznacz()>
+                            </td>
+                            <td>
+                                Nazwa mapy strony
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+
+
+
+                        ?>
+                    </tbody>
+                    <tfoot>
+                         <tr>
+                            <td class="checkbox-col">
+                                <input id="all" class="checkbox-td all" type="checkbox" onclick=Zaznacz()>
+                            </td>
+                            <td>
+                                Nazwa mapy strony
+                            </td>
+                        </tr>
+                    </tfoot>
+            </form>
+        </div>
+        <?php
+    } );
+}
+add_action('admin_menu', 'seo_summary_setup_menu');
+
+/*
+ * This function counts all articles in the table
+ */
+function numbers_of_items($ile){
+    echo '<div class="number-items tablenav number_record">';
+    if($ile == 1){
+        echo $ile . ' element';
+    }else if($ile >1 && $ile <5){
+        echo $ile . ' elementy';
+    }else{
+        echo $ile . ' elementów';
     }
-    add_action('init', 'add_css');
-    /*
-     * Add JS
-     */
-    function add_js() {
-        wp_register_script('seo', plugins_url('/script.js', __FILE__), array('jquery'));
-        wp_register_script('easing', plugins_url('/script.js', __FILE__), array('jquery'));
-        wp_enqueue_script('seo');
-        wp_enqueue_script('easing');
-    }
-    add_action('init', 'add_js');
-    
-    /*
-     * Add plugin to the Wordpress menu
-     */
-    function seo_summary_setup_menu(){
-        add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init' );
-        add_submenu_page( 'seo-summary', 'Cralw pages', 'Cralw pages',  'manage_options', 'cralw-pages', function() {
-           
-            ?>
-            <div id="seo-summary">
-                <form method="GET">
-                    
-                </form>
-            </div>
-            <?php
-        } );
-    }
-    add_action('admin_menu', 'seo_summary_setup_menu');
-    
-    /*
-     * This function counts all articles in the table
-     */
-    function numbers_of_items($ile){
-        echo '<div class="number-items tablenav number_record">';
-        if($ile == 1){
-            echo $ile . ' element';
-        }else if($ile >1 && $ile <5){
-            echo $ile . ' elementy';
-        }else{
-            echo $ile . ' elementów';
-        }
-        echo '</div>';
-    }
-    /*
-     * It writes a headlines in the table
-     */
-    function write_headlines ($data){
-        echo '<tr>
-        <td class="checkbox-col">
-            <input id="all" class="checkbox-td all" type="checkbox" onclick=Zaznacz()>
-        </td>';
-        $i =0;
-        foreach( $data as $row ){
-            foreach ( $row as $k => $v ){
-                if( $i < 1 ){
-                    if ($k == 'post_title'){
-                        echo '<th class="seo_table_th"> SEO </th>';
-                    }
+    echo '</div>';
+}
+/*
+ * It writes a headlines in the table
+ */
+function write_headlines ($data){
+    echo '<tr>
+    <td class="checkbox-col">
+        <input id="all" class="checkbox-td all" type="checkbox" onclick=Zaznacz()>
+    </td>';
+    $i =0;
+    foreach( $data as $row ){
+        foreach ( $row as $k => $v ){
+            if( $i < 1 ){
+                if ($k == 'post_title'){
+                    echo '<th class="seo_table_th"> SEO </th>';
                 }
-            }   
-        echo '</tr>';
-        $i++;
-        }
+            }
+        }   
+    echo '</tr>';
+    $i++;
     }
-    /*
-     * Main function
-     */
-    function seo_init(){ ?>
+}
+/*
+ * Main function
+ */
+function seo_init(){ ?>
     <div id="seo_summary">
         <form class="form-plugin" name="formularz" method="get">        
             <?php
