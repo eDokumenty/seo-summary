@@ -1,12 +1,12 @@
-.number-items{
+#seo_summary .number-items{
     float: right;
     margin-right: 1.6%;
     display: inline-block;
 }
-.number_record{
+#seo_summary .number_record{
     height: 20px;
 }
-input.s{
+#seo_summary input.s{
     border-radius: 2px;
     line-height: 1.5em;
     padding: 10px;
@@ -14,48 +14,48 @@ input.s{
     border: 1px solid #ddd;
     color: #888;
 }
-.title-plugin{
+#seo_summary .title-plugin{
     line-height: 0;
 }
-.form-plugin{
+#seo_summary .form-plugin{
     margin-top: 1vh;
 }
-.h1-tplugin{
+#seo_summary .h1-tplugin{
     font-size: 23px;
     font-weight: 400;
 }
-.checkbox-col{
+#seo_summary .checkbox-col{
     width: 3%;
 }
-.checkbox-td{
+#seo_summary .checkbox-td{
     margin: 2px 0 0 0px !important;
 }
-.seo-table{
+#seo_summary .seo-table{
     width: 98.8%;
 }
-.seo-table-th{
+#seo_summary .seo-table-th{
     min-width: 100px;
 }
-.post_title{
+#seo_summary .post_title{
     font-size: 18px;
     line-height: 1.2;
     text-overflow: ellipsis;
 }
-.post_title a{
+#seo_summary .post_title a{
     color: #1e0fbe;
 }
-.post_title:hover{
+#seo_summary .post_title:hover{
     text-decoration: underline;
     cursor: hand;
 }
-.url{
+#seo_summary .url{
     font-size: 14px;
     color: #006621;
     font-style: normal;
 }
-._yoast_wpseo_metadesc{
+#seo_summary ._yoast_wpseo_metadesc{
     color: #545454;
 }
-.google-link{
+#seo_summary .google-link{
     font-family: arial, sans-serif;
 }

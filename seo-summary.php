@@ -72,63 +72,65 @@
      * Main function
      */
     function seo_init(){ ?>
-    <form class="form-plugin" name="formularz" method="get">        
-        <?php
-        $query = "SELECT p.post_title, p.post_name, p.ID, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key ='_yoast_wpseo_metadesc') WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci') AND p.post_status = 'publish' ORDER BY `p`.`post_name` ASC";
-        global $wpdb;
-        $data = $wpdb->get_results($query);
-        ?>
-        
-        <table class="wp-list-table widefat fixed striped posts seo-table">
-            <thead>
-                <?php write_headlines ($data); ?>
-            </thead>
-            <tbody>
-                <?php
-                    /*
-                     * It writes row in the table
-                     */
-                    $title = '';
-                    $a = [];
-                    $r = [];
-                    foreach( $data as $row ) {
-                        if ( $title != $row->post_title ){
-                            if ( !empty($title) ){
-                                $a[] = $r;
-                            }
-                            $r = [];
-                            $title = $row->post_title;
-                            $r['post_title'] = $title;
-                            $url = home_url() . '/' . $row->post_name;
-                            $r['url'] = $url;
-                            $r['ID'] = $row->ID;
-                        }
-                        $r[$row->meta_key] = $row->meta_value;
-                    }
-                    $a[] = $r;
-                    $ile = 0;
-                    foreach ($a as $row){
-                        echo '<tr><td><input id="p' . $ile . '" type="checkbox"></td><td class="google-link">';
-                        foreach ($row as $k => $v){
-                            if( !empty($k) ){
-                                if ($k == 'post_title'){
-                                    $v = '<a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['post_title'] . '</a>';
+    <div id="seo_summary">
+        <form class="form-plugin" name="formularz" method="get">        
+            <?php
+            $query = "SELECT p.post_title, p.post_name, p.ID, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key ='_yoast_wpseo_metadesc') WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci') AND p.post_status = 'publish' ORDER BY `p`.`post_name` ASC";
+            global $wpdb;
+            $data = $wpdb->get_results($query);
+            ?>
+
+            <table class="wp-list-table widefat fixed striped posts seo-table">
+                <thead>
+                    <?php write_headlines ($data); ?>
+                </thead>
+                <tbody>
+                    <?php
+                        /*
+                         * It writes row in the table
+                         */
+                        $title = '';
+                        $a = [];
+                        $r = [];
+                        foreach( $data as $row ) {
+                            if ( $title != $row->post_title ){
+                                if ( !empty($title) ){
+                                    $a[] = $r;
                                 }
-                                if ($k != 'ID'){
-                                    echo '<div class="'. $k .'">' . $v . '</div>';
+                                $r = [];
+                                $title = $row->post_title;
+                                $r['post_title'] = $title;
+                                $url = home_url() . '/' . $row->post_name;
+                                $r['url'] = $url;
+                                $r['ID'] = $row->ID;
+                            }
+                            $r[$row->meta_key] = $row->meta_value;
+                        }
+                        $a[] = $r;
+                        $ile = 0;
+                        foreach ($a as $row){
+                            echo '<tr><td><input id="p' . $ile . '" type="checkbox"></td><td class="google-link">';
+                            foreach ($row as $k => $v){
+                                if( !empty($k) ){
+                                    if ($k == 'post_title'){
+                                        $v = '<a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['post_title'] . '</a>';
+                                    }
+                                    if ($k != 'ID'){
+                                        echo '<div class="'. $k .'">' . $v . '</div>';
+                                    }
                                 }
                             }
+                            echo '</td></tr>';
+                            $ile++;
                         }
-                        echo '</td></tr>';
-                        $ile++;
-                    }
-                    numbers_of_items($ile);
-                    ?>
-            </tbody>
-            <tfoot>
-                <?php write_headlines ($data); ?>
-            </tfoot>
-        </table>
-        <?php numbers_of_items($ile); ?>
-    </form>
+                        numbers_of_items($ile);
+                        ?>
+                </tbody>
+                <tfoot>
+                    <?php write_headlines ($data); ?>
+                </tfoot>
+            </table>
+            <?php numbers_of_items($ile); ?>
+        </form>
+    </div>
 <?php } ?>
