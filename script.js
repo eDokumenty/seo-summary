@@ -1,4 +1,3 @@
-
 var done = false;
 function Zaznacz() {
     var elements = document.forms['formularz'].elements;
