@@ -13,7 +13,7 @@ require_once __DIR__.'/class/CrawlPages.php';
  * Hook activation plugin
  */
 register_activation_hook(__FILE__, function() {
-    $seo = new CralwPages();
+    $seo = new CrawlPages();
     $seo->install();
 });
 
@@ -21,7 +21,7 @@ register_activation_hook(__FILE__, function() {
  * Hook deactivation plugin
  */
 register_deactivation_hook(__FILE__, function() {
-    $seo = new CralwPages();
+    $seo = new CrawlPages();
     $seo->uninstall();
 });
 
@@ -57,10 +57,10 @@ function seo_summary_setup_menu(){
         $url = get_bloginfo('url').'/sitemap_index.xml';
 
         if (isset($_GET['crawl']) && $_GET['crawl'] == 'true')  {
-            
+            echo 'Dont support';
         }else {
             /**
-             * Render form Cralw Pages
+             * Render form Crawl Pages
              */
             require __DIR__.'/crawl-form.php';
         } 
