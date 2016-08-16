@@ -87,7 +87,7 @@ function numbers_of_items($ile){
     function write_headlines ($data){
         echo '<tr>
         <td class="checkbox-col">
-            <input id="all" class="checkbox-td all" type="checkbox" onclick=Zaznacz()>
+            <input id="all" class="checkbox-td all" type="checkbox">
         </td>';
         $i =0;
         foreach( $data as $row ){
