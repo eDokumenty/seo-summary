@@ -68,6 +68,8 @@
 #seo_summary .google-link{
     font-family: arial, sans-serif;
 }
-#seo_summary table.fixed{
+#seo-summary #crawl-form .check-column{
+    width: 50px !important;
+}#seo_summary table.fixed{
     table-layout: auto;
 }

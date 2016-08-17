@@ -6,8 +6,12 @@
  * Version: 0.1
  */
 
+/**
+ * @var stirng
+ */
+define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
 
-require_once __DIR__.'/class/CrawlPages.php';
+require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 
 /**
  * Hook activation plugin
@@ -53,16 +57,22 @@ function seo_summary_setup_menu(){
 
     //Init cralw pages
     add_submenu_page( 'seo-summary', 'Crawl pages', 'Crawl pages',  'manage_options', 'crawl-pages', function() {
-
+        
         $url = get_bloginfo('url').'/sitemap_index.xml';
-
+        $url = 'http://edokumenty.eu/sitemap_index.xml';
         if (isset($_GET['crawl']) && $_GET['crawl'] == 'true')  {
             echo 'Dont support';
         }else {
-            /**
-             * Render form Crawl Pages
-             */
-            require __DIR__.'/crawl-form.php';
+            
+            libxml_use_internal_errors(true);
+            $content = file_get_contents($url);
+            $xml = simplexml_load_string($content);
+            if (!$xml) {
+                echo '<b>Failed loading XML with url:</b> ' . $url;
+                return;
+            }
+                      
+            include PLUGIN_SEO_DIR.'templates/crawl-form.php';
         } 
 
     } );
