@@ -12,12 +12,15 @@
 define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
 
 require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
+require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
+require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
+
 
 /**
  * Hook activation plugin
  */
 register_activation_hook(__FILE__, function() {
-    $seo = new CrawlPages();
+    $seo = new SEOSummaryLinksManager();
     $seo->install();
 });
 
@@ -25,7 +28,7 @@ register_activation_hook(__FILE__, function() {
  * Hook deactivation plugin
  */
 register_deactivation_hook(__FILE__, function() {
-    $seo = new CrawlPages();
+    $seo = new SEOSummaryLinksManager();
     $seo->uninstall();
 });
 
@@ -57,11 +60,21 @@ function seo_summary_setup_menu(){
 
     //Init cralw pages
     add_submenu_page( 'seo-summary', 'Crawl pages', 'Crawl pages',  'manage_options', 'crawl-pages', function() {
-        
+        ?>
+        <div id="seo-summary">
+        <?php
         $url = get_bloginfo('url').'/sitemap_index.xml';
         $url = 'http://edokumenty.eu/sitemap_index.xml';
         if (isset($_GET['crawl']) && $_GET['crawl'] == 'true')  {
-            echo 'Dont support';
+            libxml_use_internal_errors(true);
+            $content = file_get_contents($url);
+            $xml = simplexml_load_string($content);
+            $crawl = new CrawlPages($xml);
+            
+            $seoManager = new SEOSummaryLinksManager();
+            $crawl->loadManager($seoManager);
+            $crawl->crawl();
+            
         }else {
             
             libxml_use_internal_errors(true);
@@ -74,7 +87,9 @@ function seo_summary_setup_menu(){
                       
             include PLUGIN_SEO_DIR.'templates/crawl-form.php';
         } 
-
+        ?>
+        </div>
+        <?php
     } );
 }
 add_action('admin_menu', 'seo_summary_setup_menu');
