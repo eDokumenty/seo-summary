@@ -85,7 +85,6 @@ add_action('admin_menu', 'seo_summary_setup_menu');
 function numbers_of_items($ile){
     $string = "$ile";
     $ostatnia = $string[strlen($string)-1];
-    echo $ostatnia;
     
     echo '<div class="number-items tablenav number_record">';
     if($ile == 1){
