@@ -59,10 +59,15 @@
     font-size: 14px;
     color: #006621;
     font-style: normal;
+    white-space: nowrap;
 }
 #seo_summary ._yoast_wpseo_metadesc{
     color: #545454;
+    width: 60%;
 }
 #seo_summary .google-link{
     font-family: arial, sans-serif;
+}
+#seo_summary table.fixed{
+    table-layout: auto;
 }
