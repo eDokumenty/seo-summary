@@ -7,7 +7,7 @@
  */
 
 /**
- * @var stirng
+ * @var string
  */
 define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
 
@@ -80,7 +80,7 @@ function seo_summary_setup_menu(){
 add_action('admin_menu', 'seo_summary_setup_menu');
 
 /*
- * This function counts all articles in the table
+ * This function counts row in the table
  */
 function numbers_of_items($ile){
     $string = "$ile";
