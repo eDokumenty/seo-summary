@@ -114,10 +114,11 @@ function numbers_of_items($ile){
      */
 }
 function write_headlines ($data){
-    echo '<tr>
-    <td class="checkbox-col">
-        <input id="all" class="checkbox-td all" type="checkbox" onclick="Zaznacz()">
-    </td>';
+    echo '<tr>';
+    /*  <td class="checkbox-col">
+     *      <input id="all" class="checkbox-td all" type="checkbox" onclick="Zaznacz()">
+     *  </td>
+     */
     $i = 0;
     foreach( $data as $row ){
         foreach ( $row as $k => $v ){
@@ -176,7 +177,12 @@ function seo_init(){ ?>
                         $a[] = $r;
                         $ile = 0;
                         foreach ($a as $row){
-                            echo '<tr><td><input id="p' . $ile . '" type="checkbox"></td><td class="google-link">';
+                            
+                            /*
+                             * <td><input id="p' . $ile . '" type="checkbox"></td>
+                             */
+                            
+                            echo '<tr><td class="google-link">';
                             if (array_key_exists('_yoast_wpseo_title', $row) ){
                                 echo '<div class="_yoast_wpseo_title post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['_yoast_wpseo_title'] . '</a></div>';
                             } else {
