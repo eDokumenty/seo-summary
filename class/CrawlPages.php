@@ -50,6 +50,12 @@ class CrawlPages {
     public $urls = 0;
     
     /**
+     *
+     * @var integer
+     */
+    public $words = 0;
+    
+    /**
      * 
      * @public
      * @construct
@@ -85,7 +91,6 @@ class CrawlPages {
             foreach ($object->url as $pageUrl) {
                 $pageUrl = $pageUrl->loc;
                 $data = $this->crawlSimplePage($pageUrl);
-                
                 $contentUrl = $data['url'];
                 
                 if (empty($contentUrl)) {
@@ -111,6 +116,8 @@ class CrawlPages {
         <p>Przeczytano : <?php echo $this->page; ?> stron/y</p>
         </br>
         <p>Znaleziono w nich : <?php echo $this->urls; ?> adresów URL.</p>
+        </br>
+        <p>Słów : <?php echo $this->words; ?></p>
         </br>
         <p>Błędów( <?php echo count($this->errors); ?> ) :</p>
         <ul>
@@ -160,6 +167,8 @@ class CrawlPages {
                 $doc->loadHTML($html);
 
                 $countWords = $this->countWords($this->html2string($html));
+                
+                $this->words += $countWords;
                 
                 $elements = $doc->getElementsByTagName('a');
                 if (!is_null($elements)) {

@@ -90,7 +90,12 @@ class SEOSummaryLinksManager {
         $this->container[] = $seo;
     }
     
-    
+    /**
+     * 
+     * @public
+     * @param boolean $insert
+     * @return int
+     */
     public function flush($insert = true) {
         if ($insert) {
             $row = 0;
@@ -98,45 +103,14 @@ class SEOSummaryLinksManager {
                 $data = $this->prepare($seo);
                 
                 $this->wpdb->insert($this->tabnam, $data, [
-                    '%s', '%s', '%s', '%s'
+                    '%s', '%s', '%s', '%s', '%s'
                 ]);
                 
 
                 $row++;
             }
             
-        } else {
-            $query = 'INSERT INTO '.$this->tabnam.' (sitemap, url, post_name, content_url) VALUES ';
-        
-            $row = 0;
-            $f = true;
-            foreach($this->container as $seo) {
-                $row_value = array_values($this->prepare($seo));
-
-                $sql = '';
-                if ($f) {
-                    $f= false;
-                    $sql .= '(';
-                } else {
-                    $sql .= ',(';
-                }
-
-                $first = true;
-                foreach ($row_value as $val) {
-                    if ($first) {
-                        $sql .= "'$val'";
-                        $first = false;
-                    } else {
-                        $sql .= ", '$val'";
-                    }
-                }
-                $sql .= ')';
-                $query .= $sql;
-
-                $row++;
-            }
-            $this->wpdb->query($query);
-        }
+        } 
         return $row;
     }
     
@@ -146,12 +120,13 @@ class SEOSummaryLinksManager {
      * @return array
      */
     protected function prepare(SEOSummaryLinks $seo) {
-        
+
         return [
             'sitemap' => $seo->getSitemap(),
             'url' => $seo->getUrl(),
             'post_name' => $seo->getPostName(),
             'content_url' => $seo->getContent_url(),
+            'count_words' => $seo->getCount_words(),
         ];
     }
     
