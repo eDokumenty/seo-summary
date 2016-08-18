@@ -145,9 +145,13 @@ function write_headlines ($data){
                 }
             }
         }
+       
         echo '</tr>';
         $i++;
     }
+    echo '<th class=""> Ilość słów </th>';
+    echo '<th class=""> Ilość linków</br> na stronie </th>';
+    echo '<th class=""> Ilość linków</br> do tej strony </th>';
 }
 /*
  * Main function
@@ -214,7 +218,8 @@ function seo_init(){ ?>
 
                                 echo '</td>'
                                 . '<td>' . $row['post_type'] . '</td>'
-                                . '<td>'.$seoManager->countAllLinkOnPage($row['post_name']).'</td>'
+                                . '<td>'.$seoManager->getCountWords($row['post_name']).'</td>'
+                                . '<td>'.$seoManager->countAllLinkOnPage($row['post_name']).'</td>'                                 . '<td>'.$seoManager->countAllLinkCallToPage($row['post_name']).'</td>'
                             . '</tr>';
                             $ile++;
                         }
