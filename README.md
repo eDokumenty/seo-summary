@@ -1,10 +1,17 @@
 # SEO Summary
+
 Contributors: Klaudia Wasilewska & Piotr Kuźnik
+
 Tags: seo summary, seo, wp, wordpress
+
 Requires at least: 4.5.2
+
 Tested up to: 4.5.2
+
 Stable tag: 4.5.2
+
 License: GPLv2 or later
+
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin view list summary with post, page and inner other type post
@@ -16,7 +23,7 @@ The plugin allows you to control the content displayed page / post as the result
 
 Counts the number of links on a given page to the pages and how many pages pointing to this page.
 
-Plugin is an extension of another wtycznik Yoast SEO.
+Plugin is an extension of another plugin Yoast SEO.
 
 ## Installation ##
 
