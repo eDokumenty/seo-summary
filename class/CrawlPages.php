@@ -96,17 +96,14 @@ class CrawlPages {
                 if (empty($contentUrl)) {
                     continue;
                 }
-                foreach ($contentUrl as $simple) {
-                    
-                    $seo = new SEOSummaryLinks();
-                    $seo->setSitemap($url)
-                            ->setUrl($pageUrl)
-                            ->setContent_url($simple)
-                            ->setCount_words($data['cwords']);
-                    
-                    
-                    $this->seoManager->persist($seo);
-                }
+
+                $seo = new SEOSummaryLinks();
+                $seo->setSitemap($url)
+                        ->setUrl($pageUrl)
+                        ->setContent($contentUrl)
+                        ->setCount_words($data['cwords']);
+
+                $this->seoManager->persist($seo);
             }
         }
         ?>
@@ -178,7 +175,11 @@ class CrawlPages {
                             if ($attribute->name != 'href') {
                                 continue;
                             }
-                            $url[] = $attribute->value;
+                            
+                            $seo = new SEOSummaryLinksContent();
+                            $seo->setUrl($attribute->value);
+                            $url[] = $seo;
+                            
                             $this->urls++;
                         }
 

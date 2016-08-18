@@ -1,14 +1,14 @@
 <?php
 
 /**
- * Description of SEOSummaryLinks
+ * Description of SEOSummaryLinksContent
  * 
  * @package SEO Summary
  * @author Piotr Kuźnik <piotr.damian.kuznik@gmail.com>
  * @license default
  * @copyright (c) eDokumenty Sp. z o.o
  */
-class SEOSummaryLinks {
+class SEOSummaryLinksContent {
     
     /**
      *
@@ -16,33 +16,24 @@ class SEOSummaryLinks {
      */
     private $ID;
     
-    
-    /**
-     * @var string
-     */
-    private $sitemap;
-    
-    /**
-     * @var string
-     */
-    private $url;
-    
-    /**
-     * @var array[SEOSummaryLinksContent]
-     */
-    private $content = [];
-    
     /**
      *
      * @var integer
      */
-    private $count_words;
+    private $summary_id;
+    
+    /**
+     *
+     * @var string
+     */
+    private $url;
     
     /**
      *
      * @var string
      */
     private $post_name;
+    
     
     /**
      * 
@@ -57,7 +48,7 @@ class SEOSummaryLinks {
      * 
      * @public
      * @param integer $id
-     * @return \SEOSummaryLinks
+     * @return \SEOSummaryLinksContent
      */
     public function setId($id){
         $this->ID = intval($id);
@@ -66,26 +57,23 @@ class SEOSummaryLinks {
     }
     
     /**
-     * @public
-     * @return string
+     * 
+     * @return integer
      */
-    public function getSitemap() {
-        return $this->sitemap;
+    public function getSummaryId() {
+        return $this->summary_id;
     }
     
     /**
      * 
-     * @public
-     * @param string $sitemap
-     * @return \SEOSummaryLinks
+     * @param integer $id
+     * @return \SEOSummaryLinksContent
      */
-    public function setSitemap($sitemap) {
-        
-        $this->sitemap = str_replace([home_url(), '-sitemap.xml', 'http://edokumenty.eu/'], '', $sitemap);
+    public function setSummaryId($id) {
+        $this->summary_id = $id;
         
         return $this;
     }
-    
     
     /**
      * 
@@ -107,7 +95,7 @@ class SEOSummaryLinks {
      * 
      * @public
      * @param string $url
-     * @return \SEOSummaryLinks
+     * @return \SEOSummaryLinksContent
      */
     public function setUrl($url) {
         $this->url = $url;
@@ -134,48 +122,6 @@ class SEOSummaryLinks {
         }
         
         $this->post_name = $post_name;
-        
-        return $this;
-    }
-    
-    /**
-     * 
-     * @public
-     * @return array[SEOSummaryLinksContent]
-     */
-    public function getContent() {
-        return $this->content;
-    }
-    
-    /**
-     * 
-     * @public
-     * @param array $content
-     * @return \SEOSummaryLinks
-     */
-    public function setContent($content) {
-        $this->content = $content;
-        
-        return $this;
-    }
-    
-    /**
-     * 
-     * @public
-     * @return integer
-     */
-    public function getCount_words() {
-        return $this->count_words;
-    }
-    
-    /**
-     * 
-     * @public
-     * @param integer $count_words
-     * @return \SEOSummaryLinks
-     */
-    public function setCount_words($count_words) {
-        $this->count_words = $count_words;
         
         return $this;
     }

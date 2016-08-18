@@ -13,6 +13,7 @@ define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
 
 require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
+require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksContent.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
 
 
