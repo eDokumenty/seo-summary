@@ -96,17 +96,14 @@ class CrawlPages {
                 if (empty($contentUrl)) {
                     continue;
                 }
-                foreach ($contentUrl as $simple) {
-                    
-                    $seo = new SEOSummaryLinks();
-                    $seo->setSitemap($url)
-                            ->setUrl($pageUrl)
-                            ->setContent_url($simple)
-                            ->setCount_words($data['cwords']);
-                    
-                    
-                    $this->seoManager->persist($seo);
-                }
+
+                $seo = new SEOSummaryLinks();
+                $seo->setSitemap($url)
+                        ->setUrl($pageUrl)
+                        ->setContent($contentUrl)
+                        ->setCount_words($data['cwords']);
+
+                $this->seoManager->persist($seo);
             }
         }
         ?>
@@ -166,7 +163,7 @@ class CrawlPages {
                 $doc = new DOMDocument();
                 $doc->loadHTML($html);
 
-                $countWords = $this->countWords($this->html2string($html));
+                $countWords = $this->countWords($this->html2string($html,['a']));
                 
                 $this->words += $countWords;
                 
@@ -178,7 +175,11 @@ class CrawlPages {
                             if ($attribute->name != 'href') {
                                 continue;
                             }
-                            $url[] = $attribute->value;
+                            
+                            $seo = new SEOSummaryLinksContent();
+                            $seo->setUrl($attribute->value);
+                            $url[] = $seo;
+                            
                             $this->urls++;
                         }
 
@@ -199,11 +200,14 @@ class CrawlPages {
     /**
      * 
      * @param string $html
+     * @param array $removeTags
      * @return string
      */
-    public function html2string($html) {
+    public function html2string($html, $removeTags = []) {
         $text = '';
 
+        
+        
         // Extract body section if exists
         preg_match('/<body[^>]*>(.*?)<\/body>/is', $html, $matches);
         $text = $matches ? $matches[1] : $html;
@@ -212,6 +216,15 @@ class CrawlPages {
         // Cut high html emtities >= &#1000;  (fast, temporary solution)
         $text = preg_replace('/\&\#[0-9]{4,}\;/', '?', $text);
 
+        //cut scripts
+        $text = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $text); 
+        
+        //cut tags
+        foreach ($removeTags as $tag) {
+            $text = preg_replace('/<'.$tag.'\b[^>]*>(.*?)<\/'.$tag.'>/is', "", $text); 
+        }
+        
+        
         // Enclose TABLE element with BR tags
         $text = str_ireplace(array('<table','</table>','</tr>'), array('[#br]<table', '', '[#/tr]'), $text);
         // Enclose P element with BR tags
@@ -263,7 +276,6 @@ class CrawlPages {
 
         // Strip tags, decode html entities and special characters
         $text = htmlspecialchars_decode(html_entity_decode($text, ENT_COMPAT, $dd));
-
         return $text;
     }
     
@@ -273,7 +285,18 @@ class CrawlPages {
      * @return integer
      */
     public function countWords($text) {
-        return count(explode(' ', $text));
+        $text = preg_replace('/\s\s+/', ' ',$text);
+        $words = explode(' ', $text);
+  
+        $countWords = 0;
+        
+        foreach ($words as $word) {
+            if (empty($word)) {
+                continue;
+            }
+            $countWords++;
+        }
+        return $countWords;
     }
 
 }

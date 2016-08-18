@@ -3,7 +3,7 @@
  * Plugin Name: SEO Summary
  * Author: Klaudia Wasilewska & Piotr Kuźnik
  * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca aktualny wygląd w wyszukiwarce Google
- * Version: 1.0.1
+ * Version: 1.0.2
  */
 
 /**
@@ -13,6 +13,7 @@ define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
 
 require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
+require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksContent.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
 
 
@@ -54,22 +55,13 @@ function add_css (){
     wp_enqueue_style('seo-summary');
 }
 add_action('init', 'add_css');
-/*
- * Add JS
- */
-function add_js() {
-    wp_register_script('seo', plugins_url('/script.js', __FILE__), array('jquery'));
-    wp_register_script('easing', plugins_url('/script.js', __FILE__), array('jquery'));
-    wp_enqueue_script('seo');
-    wp_enqueue_script('easing');
-}
-add_action('init', 'add_js');
 
 /*
  * Add plugin to the Wordpress menu
  */
 function seo_summary_setup_menu(){
-    add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init' );
+    $image = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNTAgNTAiIGZpbGw9IiNhMGE1YWEiID4gICAgPHBhdGggc3R5bGU9InRleHQtaW5kZW50OjA7dGV4dC1hbGlnbjpzdGFydDtsaW5lLWhlaWdodDpub3JtYWw7dGV4dC10cmFuc2Zvcm06bm9uZTtibG9jay1wcm9ncmVzc2lvbjp0YjstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOlNhbnMiIGQ9Ik0gMiAxMSBMIDIgMTMgTCAyIDM3IEwgMiAzOSBMIDQgMzkgTCA5IDM5IEwgOSAzNSBMIDYgMzUgTCA2IDE1IEwgOSAxNSBMIDkgMTEgTCA0IDExIEwgMiAxMSB6IE0gNDEgMTEgTCA0MSAxNSBMIDQ0IDE1IEwgNDQgMzUgTCA0MSAzNSBMIDQxIDM5IEwgNDYgMzkgTCA0OCAzOSBMIDQ4IDM3IEwgNDggMTMgTCA0OCAxMSBMIDQ2IDExIEwgNDEgMTEgeiBNIDExIDE3IEwgMTEgMjEgTCAzOSAyMSBMIDM5IDE3IEwgMTEgMTcgeiBNIDExIDIzIEwgMTEgMjcgTCAzNSAyNyBMIDM1IDIzIEwgMTEgMjMgeiBNIDExIDI5IEwgMTEgMzMgTCAzOSAzMyBMIDM5IDI5IEwgMTEgMjkgeiIgY29sb3I9IiMwMDAiIG92ZXJmbG93PSJ2aXNpYmxlIiBmb250LWZhbWlseT0iU2FucyI+PC9wYXRoPjwvc3ZnPg==';
+    add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init', $image );
 
     //Init cralw pages
     add_submenu_page( 'seo-summary', 'Crawl pages', 'Crawl pages',  'manage_options', 'crawl-pages', function() {
@@ -77,7 +69,13 @@ function seo_summary_setup_menu(){
         <div id="seo-summary">
         <?php
         $url = get_bloginfo('url').'/sitemap_index.xml';
-        $url = 'http://edokumenty.eu/sitemap_index.xml';
+        
+        if( @file_get_contents($url) == true ){
+            $url = get_bloginfo('url').'/sitemap_index.xml';
+        } else {
+            $url = 'http://edokumenty.eu/sitemap_index.xml';
+        }
+        
         if (isset($_GET['crawl']) && $_GET['crawl'] == 'true')  {
             libxml_use_internal_errors(true);
             $content = file_get_contents($url);
@@ -88,16 +86,7 @@ function seo_summary_setup_menu(){
             $crawl->loadManager($seoManager);
             $crawl->crawl();
             
-        }else {
-            
-            libxml_use_internal_errors(true);
-            $content = file_get_contents($url);
-            $xml = simplexml_load_string($content);
-            if (!$xml) {
-                echo '<b>Failed loading XML with url:</b> ' . $url;
-                return;
-            }
-                      
+        }else {  
             include PLUGIN_SEO_DIR.'templates/crawl-form.php';
         } 
         ?>
@@ -141,9 +130,13 @@ function write_headlines ($data){
                 }
                 if ( $k == 'post_type' ){
                     echo '<th class="seo_table_th"> Typ postu </th>';
+                    echo '<th class=""> Ilość słów </th>';
+                    echo '<th class="center"> Ilość linków<br> na stronie </th>';
+                    echo '<th class="center"> Ilość linków<br> do tej strony </th>';
                 }
             }
         }
+       
         echo '</tr>';
         $i++;
     }
@@ -169,6 +162,8 @@ function seo_init(){ ?>
                         /*
                          * It writes row in the table
                          */
+                    
+                        $seoManager = new SEOSummaryLinksManager();
                         $title = '';
                         $a = [];
                         $r = [];
@@ -184,6 +179,7 @@ function seo_init(){ ?>
                                 $r['url'] = $url;
                                 $r['ID'] = $row->ID;
                                 $r['post_type'] = $row->post_type;
+                                $r['post_name'] = $row->post_name;
                             }
                             $r[$row->meta_key] = $row->meta_value;
                         }
@@ -210,6 +206,9 @@ function seo_init(){ ?>
 
                                 echo '</td>'
                                 . '<td>' . $row['post_type'] . '</td>'
+                                . '<td>'.$seoManager->getCountWords($row['post_name']).'</td>'
+                                . '<td>'.$seoManager->countAllLinkOnPage($row['post_name']).'</td>'
+                                . '<td>'.$seoManager->countAllLinkCallToPage($row['post_name']).'</td>'
                             . '</tr>';
                             $ile++;
                         }
