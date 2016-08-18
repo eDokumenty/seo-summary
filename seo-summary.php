@@ -80,7 +80,7 @@ function seo_summary_setup_menu(){
         <?php
         $url = get_bloginfo('url').'/sitemap_index.xml';
         
-        if( file_get_contents('http://www.example.com/') == true ){
+        if( @file_get_contents($url) == true ){
             $url = get_bloginfo('url').'/sitemap_index.xml';
         } else {
             $url = 'http://edokumenty.eu/sitemap_index.xml';
@@ -98,13 +98,6 @@ function seo_summary_setup_menu(){
             
         }else {
             
-            libxml_use_internal_errors(true);
-            $content = file_get_contents($url);
-            $xml = simplexml_load_string($content);
-            if (!$xml) {
-                echo '<b>Failed loading XML with url:</b> ' . $url;
-                return;
-            }
                       
             include PLUGIN_SEO_DIR.'templates/crawl-form.php';
         } 
