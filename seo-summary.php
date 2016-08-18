@@ -86,9 +86,6 @@ function seo_summary_setup_menu(){
             $url = 'http://edokumenty.eu/sitemap_index.xml';
         }
         
-        
-        echo $url;
-        exit;
         if (isset($_GET['crawl']) && $_GET['crawl'] == 'true')  {
             libxml_use_internal_errors(true);
             $content = file_get_contents($url);
