@@ -58,8 +58,13 @@
 #seo_summary .url{
     font-size: 14px;
     color: #006621;
-    font-style: normal;
-    white-space: nowrap;
+}
+#seo_summary .url a{
+    font-size: 14px;
+    color: #006621;
+    cursor: text;
+}
+    box-shadow: none;
 }
 #seo_summary ._yoast_wpseo_metadesc{
     color: #545454;

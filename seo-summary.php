@@ -183,15 +183,15 @@ function seo_init(){ ?>
                              */
                             
                             echo '<tr><td class="google-link">';
-                            if (array_key_exists('_yoast_wpseo_title', $row) ){
+                            if ( array_key_exists('_yoast_wpseo_title', $row) ){
                                 echo '<div class="_yoast_wpseo_title post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['_yoast_wpseo_title'] . '</a></div>';
                             } else {
                                 echo '<div class="post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['post_title'] . '</a></div>';
                                 
                             }
-                            
-                            
-                            echo '<div class="url">' . $row['url'] . '</div>';
+                            if ($row['post_type'] !== 'faq'){
+                                echo '<div class="url"><a href="' . $row['url'] . '" target="_blank">' . $row['url'] . '</a></div>';
+                            }
                             echo '<div class="_yoast_wpseo_metadesc">' . $row['_yoast_wpseo_metadesc'] . '</div>';
                             
                             echo '</td>'
