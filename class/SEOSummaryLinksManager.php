@@ -54,15 +54,17 @@ class SEOSummaryLinksManager {
             
             //create
             $query = "CREATE TABLE ".$this->tabnam." ("
-                    . " ID int(9) NOT NULL AUTO_INCREAMENT,"
-                    . " sitemap VARCHAR(50)  NOT NULL,"
-                    . " url VARCHAR(250) NOT NULL,"
-                    . " content_url VARCHAR(250) NOT NULL,"
+                    . " ID int(9) NOT NULL AUTO_INCREMENT,"
+                    . " sitemap VARCHAR(50),"
+                    . " url VARCHAR(250),"
+                    . " post_name VARCHAR(50),"
+                    . " count_words int(9),"
+                    . " content_url VARCHAR(250),"
                     . " PRIMARY KEY (ID) "
                     . ")";
             
             $this->wpdb->query($query);
-            
+           
             add_option('seo-summary_version', $version);
             add_option('seo-summary_speed', '2000');
             add_option('seo-summary_type', 'vertical');
@@ -89,28 +91,53 @@ class SEOSummaryLinksManager {
     }
     
     
-    public function flush() {
-        $query = 'INSERT INTO '.$this->tabnam.' (sitemap, url, content_url) VALUES ';
-        
-        $row = 0;
-        
-        foreach($this->container as $seo) {
-            $row_value = array_values($this->prepare($seo));
-            $sql = '(';
-            foreach ($row_value as $val) {
-                $sql .= "'$val'";
+    public function flush($insert = true) {
+        if ($insert) {
+            $row = 0;
+            foreach($this->container as $seo) {
+                $data = $this->prepare($seo);
+                
+                $this->wpdb->insert($this->tabnam, $data, [
+                    '%s', '%s', '%s', '%s'
+                ]);
+                
+
+                $row++;
             }
-            if (count($this->container) == 1 || $row - 1 == count($this->container)) {
+            
+        } else {
+            $query = 'INSERT INTO '.$this->tabnam.' (sitemap, url, post_name, content_url) VALUES ';
+        
+            $row = 0;
+            $f = true;
+            foreach($this->container as $seo) {
+                $row_value = array_values($this->prepare($seo));
+
+                $sql = '';
+                if ($f) {
+                    $f= false;
+                    $sql .= '(';
+                } else {
+                    $sql .= ',(';
+                }
+
+                $first = true;
+                foreach ($row_value as $val) {
+                    if ($first) {
+                        $sql .= "'$val'";
+                        $first = false;
+                    } else {
+                        $sql .= ", '$val'";
+                    }
+                }
                 $sql .= ')';
-            } else {
-                $sql .= '), ';
+                $query .= $sql;
+
+                $row++;
             }
-            
-            $query .= $sql;
-            
-            $row++;
+            $this->wpdb->query($query);
         }
-        $this->wpdb->query($query);
+        return $row;
     }
     
     /**
@@ -123,6 +150,7 @@ class SEOSummaryLinksManager {
         return [
             'sitemap' => $seo->getSitemap(),
             'url' => $seo->getUrl(),
+            'post_name' => $seo->getPostName(),
             'content_url' => $seo->getContent_url(),
         ];
     }

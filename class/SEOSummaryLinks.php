@@ -35,6 +35,18 @@ class SEOSummaryLinks {
     private $content_url;
     
     /**
+     *
+     * @var integer
+     */
+    private $count_words;
+    
+    /**
+     *
+     * @var string
+     */
+    private $post_name;
+    
+    /**
      * 
      * @public
      * @return integer
@@ -70,7 +82,8 @@ class SEOSummaryLinks {
      * @return \SEOSummaryLinks
      */
     public function setSitemap($sitemap) {
-        $this->sitemap = $sitemap;
+        
+        $this->sitemap = str_replace([home_url(), '-sitemap.xml', 'http://edokumenty.eu/'], '', $sitemap);
         
         return $this;
     }
@@ -86,12 +99,23 @@ class SEOSummaryLinks {
     
     /**
      * 
+     * @return string
+     */
+    public function getPostName() {
+        return $this->post_name;
+    }
+    
+    /**
+     * 
      * @public
      * @param string $url
      * @return \SEOSummaryLinks
      */
     public function setUrl($url) {
         $this->url = $url;
+        
+        $path = explode('/', $url);
+        $this->post_name = $path[ count($path) - 1];
         
         return $this;
     }
@@ -113,6 +137,27 @@ class SEOSummaryLinks {
      */
     public function setContent_url($content_url) {
         $this->content_url = $content_url;
+        
+        return $this;
+    }
+    
+    /**
+     * 
+     * @public
+     * @return integer
+     */
+    public function getCount_words() {
+        return $this->count_words;
+    }
+    
+    /**
+     * 
+     * @public
+     * @param integer $count_words
+     * @return \SEOSummaryLinks
+     */
+    public function setCount_words($count_words) {
+        $this->count_words = $count_words;
         
         return $this;
     }

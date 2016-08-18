@@ -1,0 +1,12 @@
+{
+    "name" : "SEO Summary",
+    "slug" : "seo-summary",
+    "version" : "1.0",
+    "requires" : "4.5.2",
+    "author" : "Klaudia Wasilewska & Piotr Kuźnik",
+    "author_homepage" : "http://edokumenty.eu/",
+    "download_url" : "https://github.com/eDokumenty/seo-summary/archive/master.zip",
+    "sections" : {
+        "description" : "<h1>SEO Summary</h1><p>Wtyczka do wordpressa pozwala w jednym miejscu kontrolować dane, które są przekazywane do wyszukiwarek (np Google). Zlicza ilość linków i słów na stronie badanej oraz zlicza ilość linków z naszej strony prowadzi do strony badanej.</p><p>Wtyczka wymaga do pracy obecności pluginu Yoast SEO</p>"
+    }
+}

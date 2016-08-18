@@ -1,9 +1,9 @@
 <?php
 /*
  * Plugin Name: SEO Summary
- * Author: Klaudia Wasilewska
+ * Author: Klaudia Wasilewska & Piotr Kuźnik
  * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca aktualny wygląd w wyszukiwarce Google
- * Version: 0.1
+ * Version: 1.0
  */
 
 /**
@@ -32,6 +32,14 @@ register_deactivation_hook(__FILE__, function() {
     $seo->uninstall();
 });
 
+
+require PLUGIN_SEO_DIR.'/plugin-update-checker/plugin-update-checker.php';
+$className = PucFactory::getLatestClassVersion('PucGitHubChecker');
+$myUpdateChecker = new $className(
+    'https://github.com/eDokumenty/seo-summary/',
+    __FILE__,
+    'master'
+);
 
 /*
  * Add css
