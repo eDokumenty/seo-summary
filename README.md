@@ -1,4 +1,4 @@
-=== SEO Summary ===
+# SEO Summary
 Contributors: Klaudia Wasilewska & Piotr Kuźnik
 Tags: seo summary, seo, wp, wordpress
 Requires at least: 4.5.2
@@ -9,7 +9,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 This plugin view list summary with post, page and inner other type post
 
-== Description ==
+## Description ##
 
 
 The plugin allows you to control the content displayed page / post as the result of a Google search.
@@ -18,7 +18,7 @@ Counts the number of links on a given page to the pages and how many pages point
 
 Plugin is an extension of another wtycznik Yoast SEO.
 
-== Installation ==
+## Installation ##
 
 This section describes how to install the plugin and get it working.
 
@@ -28,22 +28,22 @@ e.g.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. Plugin is ready to use!
 
-== Changelog ==
+## Changelog ##
 
-= 1.0 =
+# 1.0 #
 * Add self-update
 * Another change.
 
-= 0.5 =
+# 0.5 #
 * Add crawl pages
 * Another change 
 
-== Upgrade Notice ==
+## Upgrade Notice ##
 
-= 1.0 =
+# 1.0 #
 Add self-update
 
-= 0.5 =
+# 0.5 #
 Add crawl pages
 This version fixes a bug.
 
