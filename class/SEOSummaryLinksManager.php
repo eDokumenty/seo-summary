@@ -208,7 +208,7 @@ class SEOSummaryLinksManager {
      * @return string
      */
     public function countAllLinkOnPage($postname) {
-        $query = "SELECT count(s.*) FROM {$this->subTabnam} s, {$this->tabnam} t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
+        $query = "SELECT count(*) FROM {$this->subTabnam} s, {$this->tabnam} t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
         
         return $this->wpdb->get_var($query);
     }
@@ -219,7 +219,7 @@ class SEOSummaryLinksManager {
      * @return string
      */
     public function countAllLinkCallToPage($postname) {
-        $query = "SELECT count(s.*) FROM {$this->subTabnam} s, WHERE s.post_name = '$postname'";
+        $query = "SELECT count(*) FROM {$this->subTabnam} s WHERE s.post_name = '$postname'";
         return $this->wpdb->get_var($query);
     }
     
@@ -230,6 +230,8 @@ class SEOSummaryLinksManager {
      */
     public function getCountWords($postname) {
         $query = "SELECT count_words FROM {$this->tabnam} WHERE post_name = '$postname'";
-        return $this->wpdb->get_var($query);
+        $count = $this->wpdb->get_var($query);
+        
+        return (!empty($count)) ? $count : '0';
     }
 }
