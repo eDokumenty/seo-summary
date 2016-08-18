@@ -55,16 +55,6 @@ function add_css (){
     wp_enqueue_style('seo-summary');
 }
 add_action('init', 'add_css');
-/*
- * Add JS
- */
-function add_js() {
-    wp_register_script('seo', plugins_url('/script.js', __FILE__), array('jquery'));
-    wp_register_script('easing', plugins_url('/script.js', __FILE__), array('jquery'));
-    wp_enqueue_script('seo');
-    wp_enqueue_script('easing');
-}
-add_action('init', 'add_js');
 
 /*
  * Add plugin to the Wordpress menu
@@ -96,9 +86,7 @@ function seo_summary_setup_menu(){
             $crawl->loadManager($seoManager);
             $crawl->crawl();
             
-        }else {
-            
-                      
+        }else {  
             include PLUGIN_SEO_DIR.'templates/crawl-form.php';
         } 
         ?>
@@ -142,6 +130,9 @@ function write_headlines ($data){
                 }
                 if ( $k == 'post_type' ){
                     echo '<th class="seo_table_th"> Typ postu </th>';
+                    echo '<th class=""> Ilość słów </th>';
+                    echo '<th class="center"> Ilość linków<br> na stronie </th>';
+                    echo '<th class="center"> Ilość linków<br> do tej strony </th>';
                 }
             }
         }
@@ -149,9 +140,6 @@ function write_headlines ($data){
         echo '</tr>';
         $i++;
     }
-    echo '<th class=""> Ilość słów </th>';
-    echo '<th class=""> Ilość linków</br> na stronie </th>';
-    echo '<th class=""> Ilość linków</br> do tej strony </th>';
 }
 /*
  * Main function
@@ -219,7 +207,8 @@ function seo_init(){ ?>
                                 echo '</td>'
                                 . '<td>' . $row['post_type'] . '</td>'
                                 . '<td>'.$seoManager->getCountWords($row['post_name']).'</td>'
-                                . '<td>'.$seoManager->countAllLinkOnPage($row['post_name']).'</td>'                                 . '<td>'.$seoManager->countAllLinkCallToPage($row['post_name']).'</td>'
+                                . '<td>'.$seoManager->countAllLinkOnPage($row['post_name']).'</td>'
+                                . '<td>'.$seoManager->countAllLinkCallToPage($row['post_name']).'</td>'
                             . '</tr>';
                             $ile++;
                         }
