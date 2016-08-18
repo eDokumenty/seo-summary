@@ -142,4 +142,24 @@ class SEOSummaryLinksManager {
         $query ='TRUNCATE TABLE '.$this->tabnam;
         $this->wpdb->query($query);
     }
+    
+    /**
+     * 
+     * @param string $postname
+     * @return string
+     */
+    public function countAllLinkOnPage($postname) {
+        $query = "SELECT count(*) FROM {$this->tabnam} WHERE post_name = '$postname' ";
+        
+        return $this->wpdb->get_var($query);
+    }
+    
+    /**
+     * 
+     * @param string $postname
+     * @return string
+     */
+    public function countAllLinkCallToPage($postname) {
+        return 'test_0';
+    }
 }
