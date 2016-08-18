@@ -166,7 +166,7 @@ class CrawlPages {
                 $doc = new DOMDocument();
                 $doc->loadHTML($html);
 
-                $countWords = $this->countWords($this->html2string($html));
+                $countWords = $this->countWords($this->html2string($html,['a']));
                 
                 $this->words += $countWords;
                 
@@ -199,9 +199,10 @@ class CrawlPages {
     /**
      * 
      * @param string $html
+     * @param array $removeTags
      * @return string
      */
-    public function html2string($html) {
+    public function html2string($html, $removeTags = []) {
         $text = '';
 
         
@@ -216,6 +217,13 @@ class CrawlPages {
 
         //cut scripts
         $text = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $text); 
+        
+        //cut tags
+        foreach ($removeTags as $tag) {
+            $text = preg_replace('/<'.$tag.'\b[^>]*>(.*?)<\/'.$tag.'>/is', "", $text); 
+        }
+        
+        
         // Enclose TABLE element with BR tags
         $text = str_ireplace(array('<table','</table>','</tr>'), array('[#br]<table', '', '[#/tr]'), $text);
         // Enclose P element with BR tags
