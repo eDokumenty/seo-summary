@@ -151,7 +151,7 @@ function seo_init(){ ?>
         <h1 class="plugin_title">SEO Summary</h1>
         <form class="form-plugin" name="formularz" method="get">        
             <?php
-                $query = "SELECT p.post_title, p.post_name, p.ID, p.post_type, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key IN ('_yoast_wpseo_metadesc', '_yoast_wpseo_title')) WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci', 'faq') AND p.post_status = 'publish' ORDER BY p.post_type ASC, `p`.`post_title` ASC";
+                $query = "SELECT p.post_title, p.post_name, p.ID, p.post_type, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key IN ('_yoast_wpseo_metadesc', '_yoast_wpseo_title')) WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci', 'faq') AND p.post_status = 'publish' ORDER BY p.post_type ASC, p.post_title ASC";
                 global $wpdb;
                 $data = $wpdb->get_results($query);
             ?>
@@ -190,20 +190,21 @@ function seo_init(){ ?>
                              * <td><input id="p' . $ile . '" type="checkbox"></td>
                              */
                             
-                            echo '<tr><td class="google-link">';
-                            if ( array_key_exists('_yoast_wpseo_title', $row) ){
-                                echo '<div class="_yoast_wpseo_title post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['_yoast_wpseo_title'] . '</a></div>';
-                            } else {
-                                echo '<div class="post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['post_title'] . '</a></div>';
-                                
-                            }
-                            if ($row['post_type'] !== 'faq'){
-                                echo '<div class="url"><a href="' . $row['url'] . '" target="_blank">' . $row['url'] . '</a></div>';
-                            }
-                            echo '<div class="_yoast_wpseo_metadesc">' . $row['_yoast_wpseo_metadesc'] . '</div>';
-                            
-                            echo '</td>'
-                            . '<td>' . $row['post_type'] . '</td>'
+                            echo '<tr>'
+                                . '<td class="google-link">';
+                                if ( array_key_exists('_yoast_wpseo_title', $row) ){
+                                    echo '<div class="_yoast_wpseo_title post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['_yoast_wpseo_title'] . '</a></div>';
+                                } else {
+                                    echo '<div class="post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['post_title'] . '</a></div>';
+
+                                }
+                                if ($row['post_type'] !== 'faq'){
+                                    echo '<div class="url"><a href="' . $row['url'] . '" target="_blank">' . $row['url'] . '</a></div>';
+                                }
+                                echo '<div class="_yoast_wpseo_metadesc">' . $row['_yoast_wpseo_metadesc'] . '</div>';
+
+                                echo '</td>'
+                                . '<td>' . $row['post_type'] . '</td>'
                             . '</tr>';
                             $ile++;
                         }

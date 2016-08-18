@@ -64,6 +64,7 @@
     color: #006621;
     cursor: text;
 }
+#seo_summary .google-link a:focus{
     box-shadow: none;
 }
 #seo_summary ._yoast_wpseo_metadesc{
