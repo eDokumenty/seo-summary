@@ -79,7 +79,16 @@ function seo_summary_setup_menu(){
         <div id="seo-summary">
         <?php
         $url = get_bloginfo('url').'/sitemap_index.xml';
-        $url = 'http://edokumenty.eu/sitemap_index.xml';
+        
+        if( file_get_contents('http://www.example.com/') == true ){
+            $url = get_bloginfo('url').'/sitemap_index.xml';
+        } else {
+            $url = 'http://edokumenty.eu/sitemap_index.xml';
+        }
+        
+        
+        echo $url;
+        exit;
         if (isset($_GET['crawl']) && $_GET['crawl'] == 'true')  {
             libxml_use_internal_errors(true);
             $content = file_get_contents($url);
@@ -171,6 +180,8 @@ function seo_init(){ ?>
                         /*
                          * It writes row in the table
                          */
+                    
+                        $seoManager = new SEOSummaryLinksManager();
                         $title = '';
                         $a = [];
                         $r = [];
@@ -186,6 +197,7 @@ function seo_init(){ ?>
                                 $r['url'] = $url;
                                 $r['ID'] = $row->ID;
                                 $r['post_type'] = $row->post_type;
+                                $r['post_name'] = $row->post_name;
                             }
                             $r[$row->meta_key] = $row->meta_value;
                         }
@@ -212,6 +224,7 @@ function seo_init(){ ?>
 
                                 echo '</td>'
                                 . '<td>' . $row['post_type'] . '</td>'
+                                . '<td>'.$seoManager->countAllLinkOnPage($row['post_name']).'</td>'
                             . '</tr>';
                             $ile++;
                         }
