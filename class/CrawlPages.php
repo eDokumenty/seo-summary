@@ -204,6 +204,8 @@ class CrawlPages {
     public function html2string($html) {
         $text = '';
 
+        
+        
         // Extract body section if exists
         preg_match('/<body[^>]*>(.*?)<\/body>/is', $html, $matches);
         $text = $matches ? $matches[1] : $html;
@@ -212,6 +214,8 @@ class CrawlPages {
         // Cut high html emtities >= &#1000;  (fast, temporary solution)
         $text = preg_replace('/\&\#[0-9]{4,}\;/', '?', $text);
 
+        //cut scripts
+        $text = preg_replace('/<script\b[^>]*>(.*?)<\/script>/is', "", $text); 
         // Enclose TABLE element with BR tags
         $text = str_ireplace(array('<table','</table>','</tr>'), array('[#br]<table', '', '[#/tr]'), $text);
         // Enclose P element with BR tags
@@ -263,7 +267,6 @@ class CrawlPages {
 
         // Strip tags, decode html entities and special characters
         $text = htmlspecialchars_decode(html_entity_decode($text, ENT_COMPAT, $dd));
-
         return $text;
     }
     
@@ -273,7 +276,18 @@ class CrawlPages {
      * @return integer
      */
     public function countWords($text) {
-        return count(explode(' ', $text));
+        $text = preg_replace('/\s\s+/', ' ',$text);
+        $words = explode(' ', $text);
+  
+        $countWords = 0;
+        
+        foreach ($words as $word) {
+            if (empty($word)) {
+                continue;
+            }
+            $countWords++;
+        }
+        return $countWords;
     }
 
 }
