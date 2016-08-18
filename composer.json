@@ -1,0 +1,20 @@
+{
+	"name": "eDokumenty/seo-summary",
+	"type": "plugin",
+	"description": "",
+	"keywords": ["wordpress", "plugin seo summary", "seo summary"],
+	"homepage": "https://github.com/eDokumenty/seo-summary/",
+	"license": "MIT",
+	"authors": [
+                
+		{
+			"name": "Piotr Kuźnik",
+			"email": "pkuznik@edokumenty.eu",
+			"homepage": "http://edokumenty.eu",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.2.0"
+	}
+}

@@ -115,7 +115,7 @@ class SEOSummaryLinks {
         $this->url = $url;
         
         $path = explode('/', $url);
-        $this->post_name = $path[ count($path) - 1];
+        $this->post_name = (!empty($path[ count($path) - 1])) ? $path[ count($path) - 1] : $path[ count($path) - 2];
         
         return $this;
     }

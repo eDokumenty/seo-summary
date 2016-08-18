@@ -33,13 +33,14 @@ register_deactivation_hook(__FILE__, function() {
 });
 
 
-require PLUGIN_SEO_DIR.'/plugin-update-checker/plugin-update-checker.php';
+require PLUGIN_SEO_DIR.'/update-core/plugin-update-checker.php';
 $className = PucFactory::getLatestClassVersion('PucGitHubChecker');
 $myUpdateChecker = new $className(
     'https://github.com/eDokumenty/seo-summary/',
     __FILE__,
     'master'
 );
+
 
 /*
  * Add css
