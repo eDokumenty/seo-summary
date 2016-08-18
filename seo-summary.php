@@ -3,7 +3,7 @@
  * Plugin Name: SEO Summary
  * Author: Klaudia Wasilewska & Piotr Kuźnik
  * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca aktualny wygląd w wyszukiwarce Google
- * Version: 1.0
+ * Version: 1.0.1
  */
 
 /**
@@ -32,7 +32,9 @@ register_deactivation_hook(__FILE__, function() {
     $seo->uninstall();
 });
 
-
+/**
+ * Self-update hook
+ */
 require PLUGIN_SEO_DIR.'/update-core/plugin-update-checker.php';
 $className = PucFactory::getLatestClassVersion('PucGitHubChecker');
 $myUpdateChecker = new $className(
@@ -40,7 +42,9 @@ $myUpdateChecker = new $className(
     __FILE__,
     'master'
 );
-
+/**
+ * end hook
+ */
 
 /*
  * Add css
