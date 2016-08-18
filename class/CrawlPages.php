@@ -195,8 +195,6 @@ class CrawlPages {
     public function html2string($html) {
         $text = '';
 
-        ini_set('memory_limit', MAX_MEMORY_LIMIT);
-
         // Extract body section if exists
         preg_match('/<body[^>]*>(.*?)<\/body>/is', $html, $matches);
         $text = $matches ? $matches[1] : $html;
