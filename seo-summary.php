@@ -82,28 +82,49 @@ function queue_my_admin_scripts() {
 
 add_action('wp_ajax_get_text', function() {
     $post = $_POST['post_name'];
+    
+    $seo = new SEOSummaryLinksManager();
+    $url = $seo->getUrl($post);
+    
+    $text = CrawlPages::getTextSimplePage($url);
+    
     ?>
-
-<p>Czesc to jest text jakies strony</p>
-<p>Strona jest o name: <?php echo $post; ?></p>
+<pre>
+    <?php echo $text; ?>
+</pre>
     <?php
     return true;
 });
 
 add_action('wp_ajax_get_inLink', function() {
    $post = $_POST['post_name']; 
+   $seo = new SEOSummaryLinksManager();
+   $data = $seo->getAllLinkOnPage($post);
    ?>
 
-<p> a teraz jest cos innego ale ma name: <?php echo $post; ?> </p>
+<pre>
+       <?php
+          print_r($data);
+       ?>
+</pre>
+
     <?php
     return true;
 });
 
 add_action('wp_ajax_get_outLink', function(){
     $post = $_POST['post_name'];
-    ?>
+    
+    $seo = new SEOSummaryLinksManager();
+    
+    $data = $seo->getAllLinkCallToPage($post);
+   ?>
 
-<p>i jeszcze inny tekst: <?php echo $post; ?></p>
+<pre>
+       <?php
+          print_r($data);
+       ?>
+</pre>
 <?php
     return true;
 });

@@ -13,6 +13,7 @@ jQuery(function($) {
     $(".open-modal").click(function(event) {
         event.preventDefault();
         $info.dialog('open');
+        $info.html('');
     });
     $(document).ready(function(){
         $("td").click(function(event){
@@ -22,10 +23,11 @@ jQuery(function($) {
                 action: 'get_' + $(this).attr('wp_type'),
                 post_name: $(this).attr('wp_value')
             };  
-            document.getElementById('title_dialog').innerHTML = title;
+            $info.html(title);
+            //document.getElementById('title_dialog').innerHTML = title;
             var url = location.origin + ajaxurl;
-            $.post(url, data, function(response){  
-                document.getElementById('action_dialog').innerHTML = response;
+            $.post(url, data, function( response){  
+               $info.html("<h1>" + title + "</h1>" + response);
                 //alert(response)
             });
         });

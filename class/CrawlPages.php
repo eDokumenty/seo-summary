@@ -299,4 +299,28 @@ class CrawlPages {
         return $countWords;
     }
 
+    /**
+     * 
+     * @param string $pageUrl
+     * @return string
+     */
+    public static function getTextSimplePage($pageUrl) {
+        $handle = curl_init($pageUrl);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
+        $html = curl_exec($handle);
+        
+        if (curl_errno($handle)) {
+             $this->errors[] = "{$this->count}. $pageUrl --- #Błąd : ".curl_errno($handle).' : '.curl_error($handle);
+             
+        } else {
+            $this->page++;
+            if (!empty($html)) {
+                return $this->html2string($html,['a']); 
+            } else {
+                $this->errors[] = "{$this->count}. $pageUrl --- #Błąd : Empty output CURL";
+            }
+        }
+        curl_close($handle);
+        return '';
+    }
 }
