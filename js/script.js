@@ -8,11 +8,34 @@ jQuery(function($) {
         'closeOnEscape' : true,
         'height'        : 600,
         'width'         : 750,
-        'draggable'     : false
+        'draggable'     : false,
+        // not scroll background
+        open: function(){
+            $("body").css("overflow", "hidden");
+        },
+        close: function(){
+            $("body").css("overflow", "auto");
+        }
+    });
+    $( function() {
+        $( "#dialog" ).dialog();
+    });
+    // When click outside
+    $(".ui-widget-overlay").live("click", function (){
+        $("div:ui-dialog:visible").dialog("close");
     });
     $(".open-modal").click(function(event) {
         event.preventDefault();
         $info.dialog('open');
+        $type = $(this).attr('wp_type');
+        if ( $type === 'text' ){
+            $info.dialog( "option", "title", "Tekst na stronie" );
+        } else if ( $type === 'inLink' ) {
+            $info.dialog( "option", "title", "Linki znajdujące się na stronie" );
+        } else {
+            $info.dialog( "option", "title", "Strony zawierające link do tej strony" );
+        }
+        
         $info.html('');
     });
     $(document).ready(function(){

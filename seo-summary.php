@@ -102,11 +102,19 @@ add_action('wp_ajax_get_inLink', function() {
    $data = $seo->getAllLinkOnPage($post);
    ?>
 
-<pre>
-       <?php
-          print_r($data);
-       ?>
-</pre>
+    <?php
+        echo '<table class="wp-list-table widefat fixed striped posts">';
+        foreach ($data as $row){
+            echo '<tr><td>'.$row['url'].'</td></tr>';
+        }
+        echo '</table>';
+    ?>
+
+<!--<pre>
+    <?php
+        //print_r($data);
+    ?>
+</pre>-->
 
     <?php
     return true;
@@ -120,11 +128,19 @@ add_action('wp_ajax_get_outLink', function(){
     $data = $seo->getAllLinkCallToPage($post);
    ?>
 
-<pre>
-       <?php
-          print_r($data);
-       ?>
-</pre>
+<?php
+        echo '<table class="wp-list-table widefat fixed striped posts">';
+        foreach ($data as $row){
+            echo '<tr><td>'.$row['url'].'</td></tr>';
+        }
+        echo '</table>';
+    ?>
+
+<!--<pre>
+    <?php
+        //print_r($data);
+    ?>
+</pre>-->
 <?php
     return true;
 });
