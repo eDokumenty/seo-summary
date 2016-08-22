@@ -27,7 +27,7 @@ jQuery(function($) {
             //document.getElementById('title_dialog').innerHTML = title;
             var url = location.origin + ajaxurl;
             $.post(url, data, function( response){  
-               $info.html("<h1>" + title + "</h1>" + response);
+               $info.html("<h1>" + title + "</h1>" + response.slice(0, -1));
                 //alert(response)
             });
         });
