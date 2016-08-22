@@ -130,7 +130,7 @@ add_action('wp_ajax_get_outLink', function(){
    ?>
 
 <?php
-        echo $lp = 1;
+        $lp = 1;
         echo '<table class="wp-list-table widefat fixed striped posts">';
         foreach ($data as $row){
             echo '<tr><td style="width:50px;text-align: center;">'.$lp++.'</td><td>'.$row['url'].'</td></tr>';
