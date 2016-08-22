@@ -106,18 +106,13 @@ add_action('wp_ajax_get_inLink', function() {
         $lp = 1;
         echo '<table class="wp-list-table widefat fixed striped posts">';
         foreach ($data as $row){
-            echo '<tr><td style="width:50px; text-align: center;">'.$lp++.'</td><td>'.$row['url'].'</td></tr>';
+            echo '<tr>';
+            echo '<td style="width:50px;text-align: center;">'.$lp++.'</td>';
+            echo '<td>'.$row['url'].'</td>';
+            echo '<td>'.$row['replay'].'</td>';
+            echo '</tr>';
         }
         echo '</table>';
-    ?>
-
-<!--<pre>
-    <?php
-        //print_r($data);
-    ?>
-</pre>-->
-
-    <?php
     return true;
 });
 
@@ -133,17 +128,13 @@ add_action('wp_ajax_get_outLink', function(){
         $lp = 1;
         echo '<table class="wp-list-table widefat fixed striped posts">';
         foreach ($data as $row){
-            echo '<tr><td style="width:50px;text-align: center;">'.$lp++.'</td><td>'.$row['url'].'</td></tr>';
+            echo '<tr>';
+            echo '<td style="width:50px;text-align: center;">'.$lp++.'</td>';
+            echo '<td>'.$row['url'].'</td>';
+            echo '<td>'.$row['replay'].'</td>';
+            echo '</tr>';
         }
         echo '</table>';
-    ?>
-
-<!--<pre>
-    <?php
-        //print_r($data);
-    ?>
-</pre>-->
-<?php
     return true;
 });
 
