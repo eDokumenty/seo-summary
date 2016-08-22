@@ -163,7 +163,7 @@ class CrawlPages {
                 $doc = new DOMDocument();
                 $doc->loadHTML($html);
 
-                $countWords = $this->countWords($this->html2string($html,['a']));
+                $countWords = $this->countWords(self::html2string($html,['a']));
                 
                 $this->words += $countWords;
                 
@@ -199,11 +199,13 @@ class CrawlPages {
     
     /**
      * 
+     * @static
+     * @public
      * @param string $html
      * @param array $removeTags
      * @return string
      */
-    public function html2string($html, $removeTags = []) {
+    public static function html2string($html, $removeTags = []) {
         $text = '';
 
         
@@ -301,6 +303,8 @@ class CrawlPages {
 
     /**
      * 
+     * @static
+     * @public
      * @param string $pageUrl
      * @return string
      */
@@ -310,17 +314,16 @@ class CrawlPages {
         $html = curl_exec($handle);
         
         if (curl_errno($handle)) {
-             $this->errors[] = "{$this->count}. $pageUrl --- #Błąd : ".curl_errno($handle).' : '.curl_error($handle);
+          return false;
              
         } else {
-            $this->page++;
             if (!empty($html)) {
-                return $this->html2string($html,['a']); 
+                return self::html2string($html,['a']); 
             } else {
-                $this->errors[] = "{$this->count}. $pageUrl --- #Błąd : Empty output CURL";
+               return null;
             }
         }
         curl_close($handle);
-        return '';
+        return false;
     }
 }
