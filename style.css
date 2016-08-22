@@ -42,7 +42,7 @@
 }
 #seo_summary ._yoast_wpseo_metadesc{
     color: #545454;
-    width: 60%;
+    width: 75%;
 }
 #seo_summary .google-link{
     font-family: arial, sans-serif;
@@ -52,4 +52,17 @@
 }
 #seo_summary .center{
     text-align: center;
+}
+#seo_summary .right{
+    text-align: right;
+    padding-right: 2%;
+}
+#seo_summary .fixeed {
+    position: fixed;
+    top: 5%;
+    width: 85.4%;
+    background: white;
+}
+#seo_summary .static {
+    position: static;
 }

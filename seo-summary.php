@@ -56,6 +56,58 @@ function add_css (){
 }
 add_action('init', 'add_css');
 
+
+add_action( 'admin_enqueue_scripts', 'queue_my_admin_scripts');
+
+function queue_my_admin_scripts() {
+     //ustalamy odpowiedni protokół  
+    if ( isset($_SERVER['HTTPS']) )  
+       $protocol = 'https://';  
+    else  
+       $protocol = 'http://';  
+  
+   //pobieramy adres do pliku admin-ajax.php  
+   $admin_ajax_url = admin_url( 'admin-ajax.php', $protocol );  
+  
+ 
+   //za pomocą tej funkcji przekazujemy zmienną zawierająca adres, do javascript  
+    wp_enqueue_script (  'my-spiffy-miodal' ,       // handle
+                        plugins_url('/js/script.js', __FILE__),  // source
+                        array('jquery-ui-dialog')); // dependencies
+    // A style available in WP               
+    wp_enqueue_style (  'wp-jquery-ui-dialog');
+    
+}
+
+
+add_action('wp_ajax_get_text', function() {
+    $post = $_POST['post_name'];
+    ?>
+
+<p>Czesc to jest text jakies strony</p>
+<p>Strona jest o name: <?php echo $post; ?></p>
+    <?php
+    return true;
+});
+
+add_action('wp_ajax_get_inLink', function() {
+   $post = $_POST['post_name']; 
+   ?>
+
+<p> a teraz jest cos innego ale ma name: <?php echo $post; ?> </p>
+    <?php
+    return true;
+});
+
+add_action('wp_ajax_get_outLink', function(){
+    $post = $_POST['post_name'];
+    ?>
+
+<p>i jeszcze inny tekst: <?php echo $post; ?></p>
+<?php
+    return true;
+});
+
 /*
  * Add plugin to the Wordpress menu
  */
@@ -130,7 +182,7 @@ function write_headlines ($data){
                 }
                 if ( $k == 'post_type' ){
                     echo '<th class="seo_table_th"> Typ postu </th>';
-                    echo '<th class=""> Ilość słów </th>';
+                    echo '<th> Ilość słów </th>';
                     echo '<th class="center"> Ilość linków<br> na stronie </th>';
                     echo '<th class="center"> Ilość linków<br> do tej strony </th>';
                 }
@@ -141,6 +193,7 @@ function write_headlines ($data){
         $i++;
     }
 }
+
 /*
  * Main function
  */
@@ -154,7 +207,7 @@ function seo_init(){ ?>
                 $data = $wpdb->get_results($query);
             ?>
             <table class="wp-list-table widefat fixed striped posts seo-table">
-                <thead>
+                <thead id="thead" class="static">
                     <?php write_headlines ($data); ?>
                 </thead>
                 <tbody>
@@ -195,9 +248,10 @@ function seo_init(){ ?>
                                 . '<td class="google-link">';
                                 if ( array_key_exists('_yoast_wpseo_title', $row) ){
                                     echo '<div class="_yoast_wpseo_title post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['_yoast_wpseo_title'] . '</a></div>';
+                                    $link_title = $row['_yoast_wpseo_title'];
                                 } else {
                                     echo '<div class="post_title"><a href="' . admin_url() .'post.php?post=' . $row['ID'] . '&action=edit">' . $row['post_title'] . '</a></div>';
-
+                                    $link_title = $row['post_title'];
                                 }
                                 if ($row['post_type'] !== 'faq'){
                                     echo '<div class="url"><a href="' . $row['url'] . '" target="_blank">' . $row['url'] . '</a></div>';
@@ -206,10 +260,10 @@ function seo_init(){ ?>
 
                                 echo '</td>'
                                 . '<td>' . $row['post_type'] . '</td>'
-                                . '<td>'.$seoManager->getCountWords($row['post_name']).'</td>'
-                                . '<td>'.$seoManager->countAllLinkOnPage($row['post_name']).'</td>'
-                                . '<td>'.$seoManager->countAllLinkCallToPage($row['post_name']).'</td>'
-                            . '</tr>';
+                                . '<td id="'.$link_title.'" wp_type="text" wp_value="'.$row['post_name'].'" class="open-modal right">'.$seoManager->getCountWords($row['post_name']).'</td>'
+                                . '<td id="'.$link_title.'" wp_type="inLink" wp_value="'.$row['post_name'].'" class="open-modal right">'.$seoManager->countAllLinkOnPage($row['post_name']).'</td>'
+                                . '<td id="'.$link_title.'" wp_type="outLink" wp_value="'.$row['post_name'].'" class="open-modal right">'.$seoManager->countAllLinkCallToPage($row['post_name']).'</td>';
+                            echo '</tr>';
                             $ile++;
                         }
                         numbers_of_items($ile); ?>
@@ -219,6 +273,10 @@ function seo_init(){ ?>
                 </tfoot>
             </table>
             <?php numbers_of_items($ile); ?>
+            <div id="modal-content">
+                <h1 id="title_dialog"></h1>
+                <div id="action_dialog"></div>
+            </div>
         </form>
     </div>
 <?php } ?>
