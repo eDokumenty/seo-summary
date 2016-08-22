@@ -3,7 +3,7 @@
  * Plugin Name: SEO Summary
  * Author: Klaudia Wasilewska & Piotr Kuźnik
  * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca aktualny wygląd w wyszukiwarce Google
- * Version: 1.0.2
+ * Version: 1.1.0
  */
 
 /**
