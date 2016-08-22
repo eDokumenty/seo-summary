@@ -208,7 +208,7 @@ class SEOSummaryLinksManager {
      * @return string
      */
     public function countAllLinkOnPage($postname) {
-        $query = "SELECT count(*) FROM {$this->subTabnam} s, {$this->tabnam} t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
+        $query = "SELECT count(*) FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
         
         return $this->wpdb->get_var($query);
     }
@@ -219,7 +219,7 @@ class SEOSummaryLinksManager {
      * @return string
      */
     public function countAllLinkCallToPage($postname) {
-        $query = "SELECT count(*) FROM {$this->subTabnam} s WHERE s.post_name = '$postname'";
+        $query = "SELECT count(*) FROM {$this->subTabnam} WHERE post_name = '$postname'";
         return $this->wpdb->get_var($query);
     }
     
@@ -233,5 +233,39 @@ class SEOSummaryLinksManager {
         $count = $this->wpdb->get_var($query);
         
         return (!empty($count)) ? $count : '0';
+    }
+    
+    /**
+     * 
+     * @param string $postname
+     * @return array
+     */
+    public function getAllLinkOnPage($postname) {
+        $query = "SELECT s.url FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
+        
+        return $this->wpdb->get_results($query, ARRAY_A);
+    }
+    
+    /**
+     * 
+     * @param string $postname
+     * @return array
+     */
+    public function getAllLinkCallToPage($postname) {
+        $query = "SELECT t.url FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.post_name = '$postname' and t.ID = s.summary_id ";
+        
+        return $this->wpdb->get_results($query, ARRAY_A);
+    }
+    
+    /**
+     * 
+     * @param string $postname
+     * @return string
+     */
+    public function getUrl($postname) {
+        $query = "SELECT url FROM {$this->tabnam} WHERE post_name = '$postname'";
+        $url = $this->wpdb->get_var($query);
+        
+        return (!empty($url)) ? $url : '';
     }
 }

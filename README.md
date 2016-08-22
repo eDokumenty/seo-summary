@@ -37,20 +37,8 @@ e.g.
 
 ## Changelog ##
 
-# 1.0 #
-* Add self-update
-* Another change.
-
-# 0.5 #
-* Add crawl pages
-* Another change 
+You can see this section in Releases page
 
 ## Upgrade Notice ##
 
-# 1.0 #
-Add self-update
-
-# 0.5 #
-Add crawl pages
-This version fixes a bug.
-
+You can see this section in Releases page
