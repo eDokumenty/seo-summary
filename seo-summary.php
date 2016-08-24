@@ -3,18 +3,20 @@
  * Plugin Name: SEO Summary
  * Author: Klaudia Wasilewska & Piotr Kuźnik
  * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca aktualny wygląd w wyszukiwarce Google
- * Version: 1.1.0
+ * Version: 1.1.1
  */
 
 /**
  * @var string
  */
 define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
+define('SEO_VERSION', '1.1.0');
 
 require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksContent.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
+require_once PLUGIN_SEO_DIR.'/class/DisplayTestPage.php';
 
 
 /**
@@ -23,6 +25,7 @@ require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
 register_activation_hook(__FILE__, function() {
     $seo = new SEOSummaryLinksManager();
     $seo->install();
+    $seo->update();
 });
 
 /**
@@ -31,6 +34,16 @@ register_activation_hook(__FILE__, function() {
 register_deactivation_hook(__FILE__, function() {
     $seo = new SEOSummaryLinksManager();
     $seo->uninstall();
+});
+
+/**
+ * Hook update plugin
+ */
+add_action('plugins_loaded', function() {
+    $seo = new SEOSummaryLinksManager();
+    $seo->update();
+    
+    DisplayTestPage::printCss();
 });
 
 /**
@@ -79,6 +92,50 @@ function queue_my_admin_scripts() {
     
 }
 
+/**
+ * Hook ajax test page
+ * 
+ * @public 
+ * @function wp_ajax_test_page
+ */
+add_action('wp_ajax_test_page', function () {
+    $url = $_POST['url'];
+    $xpath = $_POST['xpath'];
+    $bgColor = $_POST['bgColor'];
+    
+    
+    $test = new DisplayTestPage($url);
+    $test->addXpathToDistinction($xpath, $bgColor);
+    
+    
+    echo $url.'#seo-test';
+});
+
+/**
+ * Hook ajax crawl
+ * 
+ * @public
+ * @function wp_ajax_crawl_now
+ */
+add_action('wp_ajax_crawl_now', function (){
+
+    $url = get_bloginfo('url').'/sitemap_index.xml';
+
+    if( @file_get_contents($url) == true && home_url() !== 'http://localhost/ed' ){
+        $url = get_bloginfo('url').'/sitemap_index.xml';
+    } else {
+        $url = 'http://edokumenty.eu/sitemap_index.xml';
+    }
+
+    libxml_use_internal_errors(true);
+    $content = file_get_contents($url);
+    $xml = simplexml_load_string($content);
+    $crawl = new CrawlPages($xml);
+
+    $seoManager = new SEOSummaryLinksManager();
+    $crawl->loadManager($seoManager);
+    $crawl->crawl();
+});
 
 add_action('wp_ajax_get_text', function() {
     $post = $_POST['post_name'];
@@ -152,7 +209,7 @@ function seo_summary_setup_menu(){
         <?php
         $url = get_bloginfo('url').'/sitemap_index.xml';
         
-        if( @file_get_contents($url) == true ){
+        if( @file_get_contents($url) == true && home_url() !== 'http://localhost/ed' ){
             $url = get_bloginfo('url').'/sitemap_index.xml';
         } else {
             $url = 'http://edokumenty.eu/sitemap_index.xml';

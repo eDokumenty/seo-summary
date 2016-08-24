@@ -39,6 +39,30 @@ jQuery(function($) {
         $info.html('');
     });
     $(document).ready(function(){
+        $( "#crawl-now" ).click(function(event){
+             var self = $( this );
+
+            var loaderContainer = $( '<span/>', {
+                'class': 'loader-image-container'
+            }).insertAfter( self );
+
+            var loader = $( '<img/>', {
+                src: location.origin + ajaxurl.replace('admin-ajax.php','images/loading.gif'),
+                'class': 'loader-image'
+            }).appendTo( loaderContainer );
+            
+            var url = location.origin + ajaxurl;
+            
+            var data = {  
+                action: 'crawl_now'
+            };
+            $.post(url, data, function( response){  
+               $( "#seo-summary" ).empty(); 
+               $( "#seo-summary" ).html(response.slice(0, -1));
+               alert('Wykonano!');
+            });
+        });
+        
         $("td").click(function(event){
         event.stopPropagation();
             var title = $(this).attr('id');
@@ -55,6 +79,7 @@ jQuery(function($) {
             });
         });
     });
+    
 });
 
 

@@ -50,10 +50,10 @@ class SEOSummaryLinksManager {
     /**
      * Activate plugin
      * 
-     * @global wpdb $wpdb
+     * @public
      */
     public function install(){
-        $version = '1.0.1';
+        $version = SEO_VERSION;
         
         $query = "CREATE TABLE ".$this->tabnam." ("
                 . " ID int(9) NOT NULL AUTO_INCREMENT,"
@@ -77,8 +77,9 @@ class SEOSummaryLinksManager {
         
         if ($this->wpdb->get_var("SHOW TABLES LIKE  '".$this->tabnam."'") != $this->tabnam) {
            
+            
             $this->wpdb->query($query);
-           
+            $this->wpdb->query($query2);
             add_option('seo-summary_version', $version);
             add_option('seo-summary_speed', '2000');
             add_option('seo-summary_type', 'vertical');
@@ -97,16 +98,21 @@ class SEOSummaryLinksManager {
     }
     
     /**
-     * Deactivate plugin
+     * Update plugin
      * 
-     * @global wpdb $wpdb
+     * @public
      */
-    public function uninstall() {
-        $query ='DROP TABLE '.$this->subTabnam;
-        $query2 ='DROP TABLE '.$this->tabnam;
-        $this->wpdb->query($query);
-        $this->wpdb->query($query2);
+    public function update() {
+        if (version_compare('1.1.1', $versionClient, '>=')) {
+            $query = "ALTER TABLE `{$this->subTabnam}` ADD `xpath` TEXT NULL AFTER `post_name`;";
+            
+            $this->wpdb->query($query);
+        }
+        
+        update_option('seo-summary_version', SEO_VERSION);   
     }
+    
+    
 
     /**
      * 
@@ -155,6 +161,25 @@ class SEOSummaryLinksManager {
         return $row;
     }
     
+    
+    /**
+     * Truncate table
+     * 
+     * @public
+     */
+    public function truncate(){
+        $query ='DELETE FROM '.$this->subTabnam;
+        $this->wpdb->query($query);
+        $query ='DELETE FROM '.$this->tabnam;
+        $this->wpdb->query($query);
+        
+       
+        $query = 'ALTER TABLE '.$this->tabnam.' AUTO_INCREMENT=1 ';
+        $this->wpdb->query($query);
+        $query = 'ALTER TABLE '.$this->subTabnam.' AUTO_INCREMENT=1 ';
+        $this->wpdb->query($query);
+    }
+    
     /**
      * 
      * @param SEOSummaryLinks $seo
@@ -180,27 +205,11 @@ class SEOSummaryLinksManager {
             'summary_id' => $seo->getSummaryId(),
             'url' => $seo->getUrl(),
             'post_name' => $seo->getPostName(),
+            'xpath' => $seo->getXPath(),
         ];
     }
 
 
-    /**
-     * Truncate table
-     * 
-     * @public
-     */
-    public function truncate(){
-        $query ='DELETE FROM '.$this->subTabnam;
-        $this->wpdb->query($query);
-        $query ='DELETE FROM '.$this->tabnam;
-        $this->wpdb->query($query);
-        
-       
-        $query = 'ALTER TABLE '.$this->tabnam.' AUTO_INCREMENT=1 ';
-        $this->wpdb->query($query);
-        $query = 'ALTER TABLE '.$this->subTabnam.' AUTO_INCREMENT=1 ';
-        $this->wpdb->query($query);
-    }
     
     /**
      * 
@@ -241,7 +250,7 @@ class SEOSummaryLinksManager {
      * @return array
      */
     public function getAllLinkOnPage($postname) {
-        $query = "SELECT s.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id GROUP BY s.url";
+        $query = "SELECT s.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id --GROUP BY s.url";
         
         return $this->wpdb->get_results($query, ARRAY_A);
     }
@@ -252,7 +261,7 @@ class SEOSummaryLinksManager {
      * @return array
      */
     public function getAllLinkCallToPage($postname) {
-        $query = "SELECT t.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.post_name = '$postname' and t.ID = s.summary_id GROUP BY t.url ";
+        $query = "SELECT t.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.post_name = '$postname' and t.ID = s.summary_id --GROUP BY t.url ";
         
         return $this->wpdb->get_results($query, ARRAY_A);
     }
@@ -267,5 +276,17 @@ class SEOSummaryLinksManager {
         $url = $this->wpdb->get_var($query);
         
         return (!empty($url)) ? $url : '';
+    }
+    
+    /**
+     * Deactivate plugin
+     * 
+     * @public
+     */
+    public function uninstall() {
+        $query ='DROP TABLE '.$this->subTabnam;
+        $query2 ='DROP TABLE '.$this->tabnam;
+        $this->wpdb->query($query);
+        $this->wpdb->query($query2);
     }
 }
