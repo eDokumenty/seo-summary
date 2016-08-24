@@ -161,6 +161,9 @@ function write_headlines ($data){
                 }
                 if ( $k == 'post_type' ){
                     echo '<th class="seo_table_th" style="width:8%; padding-right: 50px;"> Typ postu </th>';
+                    echo '<th class="th-width seo_table_th"> Ilość słów </th>';
+                    echo '<th class="th-width seo_table_th" class="center"> Ilość linków<br> na stronie </th>';
+                    echo '<th class="th-width seo_table_th" class="center"> Ilość linków<br> do tej strony </th>';
                 }
             }
         }
@@ -180,6 +183,7 @@ function seo_init(){ ?>
                 global $wpdb;
                 $data = $wpdb->get_results($query);
             ?>
+            <table id="sortTable" class="wp-list-table widefat fixed striped posts seo-table">
                 <thead id="thead" class="static">
                     <?php write_headlines ($data); ?>
                 </thead>

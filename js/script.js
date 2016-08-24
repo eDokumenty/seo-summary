@@ -127,4 +127,5 @@ jQuery(function($){
 });
 
 jQuery(function($) {
+    $("#sortTable").tablesorter();
 });
