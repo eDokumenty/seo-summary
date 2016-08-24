@@ -104,7 +104,12 @@ add_action('wp_ajax_get_inLink', function() {
 
     <?php
         $lp = 1;
-        echo '<table class="wp-list-table widefat fixed striped posts">';
+        echo '<table class="wp-list-table widefat striped posts">';
+        echo '<thead>'
+                . '<th style="text-align: center;">L.p</th>'
+                . '<th>URL</th>'
+                . '<th>Ile razy</th>'
+            . '</thead>';
         foreach ($data as $row){
             echo '<tr>';
             echo '<td style="width:50px;text-align: center;">'.$lp++.'</td>';
@@ -126,7 +131,12 @@ add_action('wp_ajax_get_outLink', function(){
 
 <?php
         $lp = 1;
-        echo '<table class="wp-list-table widefat fixed striped posts">';
+        echo '<table class="wp-list-table widefat striped posts">';
+        echo '<thead>'
+                . '<th style="text-align: center;">L.p</th>'
+                . '<th>URL</th>'
+                . '<th>Ile razy</th>'
+            . '</thead>';
         foreach ($data as $row){
             echo '<tr>';
             echo '<td style="width:50px;text-align: center;">'.$lp++.'</td>';
