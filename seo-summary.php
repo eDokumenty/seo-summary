@@ -2,9 +2,10 @@
 /*
  * Plugin Name: SEO Summary
  * Author: Klaudia Wasilewska & Piotr Kuźnik
- * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca aktualny wygląd w wyszukiwarce Google
+ * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca ich aktualny wygląd w wyszukiwarce Google
  * Version: 1.1.1
- */
+*/
+
 
 /**
  * @var string
@@ -17,7 +18,7 @@ require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksContent.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
 require_once PLUGIN_SEO_DIR.'/class/DisplayTestPage.php';
-
+require_once PLUGIN_SEO_DIR.'/wp_ajax.php';
 
 /**
  * Hook activation plugin
@@ -89,111 +90,10 @@ function queue_my_admin_scripts() {
                         array('jquery-ui-dialog')); // dependencies
     // A style available in WP               
     wp_enqueue_style (  'wp-jquery-ui-dialog');
-    
 }
 
-/**
- * Hook ajax test page
- * 
- * @public 
- * @function wp_ajax_test_page
- */
-add_action('wp_ajax_test_page', function () {
-    $url = $_POST['url'];
-    $xpath = $_POST['xpath'];
-    $bgColor = $_POST['bgColor'];
-    
-    
-    $test = new DisplayTestPage($url);
-    $test->addXpathToDistinction($xpath, $bgColor);
-    
-    
-    echo $url.'#seo-test';
-});
 
-/**
- * Hook ajax crawl
- * 
- * @public
- * @function wp_ajax_crawl_now
- */
-add_action('wp_ajax_crawl_now', function (){
 
-    $url = get_bloginfo('url').'/sitemap_index.xml';
-
-    if( @file_get_contents($url) == true && home_url() !== 'http://localhost/ed' ){
-        $url = get_bloginfo('url').'/sitemap_index.xml';
-    } else {
-        $url = 'http://edokumenty.eu/sitemap_index.xml';
-    }
-
-    libxml_use_internal_errors(true);
-    $content = file_get_contents($url);
-    $xml = simplexml_load_string($content);
-    $crawl = new CrawlPages($xml);
-
-    $seoManager = new SEOSummaryLinksManager();
-    $crawl->loadManager($seoManager);
-    $crawl->crawl();
-});
-
-add_action('wp_ajax_get_text', function() {
-    $post = $_POST['post_name'];
-    
-    $seo = new SEOSummaryLinksManager();
-    $url = $seo->getUrl($post);
-    
-    $text = CrawlPages::getTextSimplePage($url);
-    
-    ?>
-<pre>
-    <?php echo $text; ?>
-</pre>
-    <?php
-    return true;
-});
-
-add_action('wp_ajax_get_inLink', function() {
-   $post = $_POST['post_name']; 
-   $seo = new SEOSummaryLinksManager();
-   $data = $seo->getAllLinkOnPage($post);
-   ?>
-
-    <?php
-        $lp = 1;
-        echo '<table class="wp-list-table widefat fixed striped posts">';
-        foreach ($data as $row){
-            echo '<tr>';
-            echo '<td style="width:50px;text-align: center;">'.$lp++.'</td>';
-            echo '<td>'.$row['url'].'</td>';
-            echo '<td>'.$row['replay'].'</td>';
-            echo '</tr>';
-        }
-        echo '</table>';
-    return true;
-});
-
-add_action('wp_ajax_get_outLink', function(){
-    $post = $_POST['post_name'];
-    
-    $seo = new SEOSummaryLinksManager();
-    
-    $data = $seo->getAllLinkCallToPage($post);
-   ?>
-
-<?php
-        $lp = 1;
-        echo '<table class="wp-list-table widefat fixed striped posts">';
-        foreach ($data as $row){
-            echo '<tr>';
-            echo '<td style="width:50px;text-align: center;">'.$lp++.'</td>';
-            echo '<td>'.$row['url'].'</td>';
-            echo '<td>'.$row['replay'].'</td>';
-            echo '</tr>';
-        }
-        echo '</table>';
-    return true;
-});
 
 /*
  * Add plugin to the Wordpress menu
@@ -224,7 +124,6 @@ function seo_summary_setup_menu(){
             $seoManager = new SEOSummaryLinksManager();
             $crawl->loadManager($seoManager);
             $crawl->crawl();
-            
         }else {  
             include PLUGIN_SEO_DIR.'templates/crawl-form.php';
         } 
@@ -255,28 +154,21 @@ function numbers_of_items($ile){
      */
 }
 function write_headlines ($data){
-    echo '<tr>';
-    /*  <td class="checkbox-col">
-     *      <input id="all" class="checkbox-td all" type="checkbox" onclick="Zaznacz()">
-     *  </td>
-     */
     $i = 0;
     foreach( $data as $row ){
         foreach ( $row as $k => $v ){
             if( $i < 1 ){
                 if ( $k == 'post_title' ){
-                    echo '<th class="seo_table_th"> SEO </th>';
+                    echo '<th style="width:70%" class="seo_table_th"> SEO </th>';
                 }
                 if ( $k == 'post_type' ){
-                    echo '<th class="seo_table_th"> Typ postu </th>';
-                    echo '<th> Ilość słów </th>';
-                    echo '<th class="center"> Ilość linków<br> na stronie </th>';
-                    echo '<th class="center"> Ilość linków<br> do tej strony </th>';
+                    echo '<th class="seo_table_th" style="width:8%; padding-right: 50px;"> Typ postu </th>';
+                    echo '<th style="width:6%;"> Ilość słów </th>';
+                    echo '<th style="width:6%;" class="center"> Ilość linków<br> na stronie </th>';
+                    echo '<th style="width:6%;" class="center"> Ilość linków<br> do tej strony </th>';
                 }
             }
         }
-       
-        echo '</tr>';
         $i++;
     }
 }
@@ -302,7 +194,6 @@ function seo_init(){ ?>
                         /*
                          * It writes row in the table
                          */
-                    
                         $seoManager = new SEOSummaryLinksManager();
                         $title = '';
                         $a = [];
@@ -326,11 +217,6 @@ function seo_init(){ ?>
                         $a[] = $r;
                         $ile = 0;
                         foreach ($a as $row){
-                            
-                            /*
-                             * <td><input id="p' . $ile . '" type="checkbox"></td>
-                             */
-                            
                             echo '<tr>'
                                 . '<td class="google-link">';
                                 if ( array_key_exists('_yoast_wpseo_title', $row) ){
