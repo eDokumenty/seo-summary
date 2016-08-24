@@ -66,7 +66,7 @@ class DisplayTestPage {
         ob_start();
         
         $url = get_option(__CLASS__, false);
-        
+        error_log(print_r($_COOKIE, true));
         if ($url === FALSE || $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] !== $url ) {
             return;
         }

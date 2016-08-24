@@ -1,4 +1,20 @@
-jQuery(function($) {
+function findOnPage(elid) {
+    var color = prompt("Podaj kolor html HEX", '#c0392b');
+    var url = location.origin + ajaxurl;
+            
+    var data = {  
+        action: 'findOnPage',
+        bgColor: color,
+        elid : elid
+    };
+    jQuery(function($) {
+        $.post(url, data, function( response){  
+           window.open(response.slice(0, -1),'_blank'); 
+        });
+    });
+}
+    
+jQuery(function($) {     
     var $info = $("#modal-content");
     $info.dialog({
         'dialogClass'   : 'wp-dialog',
@@ -61,11 +77,7 @@ jQuery(function($) {
                $( "#seo-summary" ).html(response.slice(0, -1));
                alert('Wykonano!');
             });
-        });
-        
-        $( ".find-on-page" ).click(function(event){
-            alert('test');
-        });
+        });       
         
         $("td").click(function(event){
         event.stopPropagation();

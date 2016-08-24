@@ -216,6 +216,7 @@ class SEOSummaryLinksManager {
     
     /**
      * 
+     * @public
      * @param string $postname
      * @return string
      */
@@ -227,6 +228,7 @@ class SEOSummaryLinksManager {
     
     /**
      * 
+     * @public
      * @param string $postname
      * @return string
      */
@@ -237,6 +239,7 @@ class SEOSummaryLinksManager {
     
     /**
      * 
+     * @public
      * @param string $postname
      * @return string
      */
@@ -249,17 +252,19 @@ class SEOSummaryLinksManager {
     
     /**
      * 
+     * @public
      * @param string $postname
      * @return array
      */
     public function getAllLinkOnPage($postname) {
-        $query = "SELECT s.url, 0 as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
+        $query = "SELECT s.url, s.ID, 0 as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
         
         return $this->wpdb->get_results($query, ARRAY_A);
     }
     
     /**
      * 
+     * @public
      * @param string $postname
      * @return array
      */
@@ -271,6 +276,7 @@ class SEOSummaryLinksManager {
     
     /**
      * 
+     * @public
      * @param string $postname
      * @return string
      */
@@ -279,6 +285,34 @@ class SEOSummaryLinksManager {
         $url = $this->wpdb->get_var($query);
         
         return (!empty($url)) ? $url : '';
+    }
+    
+    /**
+     * 
+     * @public
+     * @param integer $id
+     * @return string
+     */
+    public function getXpath($id) {
+        $id = intval($id);
+        $query = "SELECT xpath FROM {$this->subTabnam} WHERE ID = $id";
+        $x = $this->wpdb->get_var($query);
+        
+        return (!empty($x)) ? $x : '';
+    }
+    
+    /**
+     * 
+     * @public
+     * @param integer $id
+     * @return string
+     */
+    public function getUrlParent($id) {
+        $id = intval($id);
+        $query = "SELECT t.url FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.ID = $id and t.ID = s.summary_id ";
+        $x = $this->wpdb->get_var($query);
+        
+        return (!empty($x)) ? $x : '';
     }
     
     /**
