@@ -2,7 +2,7 @@
 /*
  * Plugin Name: SEO Summary
  * Author: Klaudia Wasilewska & Piotr Kuźnik
- * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca aktualny wygląd w wyszukiwarce Google
+ * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca ich aktualny wygląd w wyszukiwarce Google
  * Version: 1.1.0
  */
 
@@ -15,7 +15,6 @@ require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksContent.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
-
 
 /**
  * Hook activation plugin
@@ -76,7 +75,6 @@ function queue_my_admin_scripts() {
                         array('jquery-ui-dialog')); // dependencies
     // A style available in WP               
     wp_enqueue_style (  'wp-jquery-ui-dialog');
-    
 }
 
 require_once PLUGIN_SEO_DIR.'/wp_ajax.php';;
@@ -110,7 +108,6 @@ function seo_summary_setup_menu(){
             $seoManager = new SEOSummaryLinksManager();
             $crawl->loadManager($seoManager);
             $crawl->crawl();
-            
         }else {  
             include PLUGIN_SEO_DIR.'templates/crawl-form.php';
         } 
@@ -141,28 +138,21 @@ function numbers_of_items($ile){
      */
 }
 function write_headlines ($data){
-    echo '<tr>';
-    /*  <td class="checkbox-col">
-     *      <input id="all" class="checkbox-td all" type="checkbox" onclick="Zaznacz()">
-     *  </td>
-     */
     $i = 0;
     foreach( $data as $row ){
         foreach ( $row as $k => $v ){
             if( $i < 1 ){
                 if ( $k == 'post_title' ){
-                    echo '<th class="seo_table_th"> SEO </th>';
+                    echo '<th style="width:70%" class="seo_table_th"> SEO </th>';
                 }
                 if ( $k == 'post_type' ){
-                    echo '<th class="seo_table_th"> Typ postu </th>';
-                    echo '<th> Ilość słów </th>';
-                    echo '<th class="center"> Ilość linków<br> na stronie </th>';
-                    echo '<th class="center"> Ilość linków<br> do tej strony </th>';
+                    echo '<th class="seo_table_th" style="width:8%"> Typ postu </th>';
+                    echo '<th style="width:6%"> Ilość słów </th>';
+                    echo '<th style="width:6%" class="center"> Ilość linków<br> na stronie </th>';
+                    echo '<th style="width:6%" class="center"> Ilość linków<br> do tej strony </th>';
                 }
             }
         }
-       
-        echo '</tr>';
         $i++;
     }
 }
@@ -188,7 +178,6 @@ function seo_init(){ ?>
                         /*
                          * It writes row in the table
                          */
-                    
                         $seoManager = new SEOSummaryLinksManager();
                         $title = '';
                         $a = [];
@@ -212,11 +201,6 @@ function seo_init(){ ?>
                         $a[] = $r;
                         $ile = 0;
                         foreach ($a as $row){
-                            
-                            /*
-                             * <td><input id="p' . $ile . '" type="checkbox"></td>
-                             */
-                            
                             echo '<tr>'
                                 . '<td class="google-link">';
                                 if ( array_key_exists('_yoast_wpseo_title', $row) ){
