@@ -85,6 +85,9 @@ jQuery(function($) {
 
 jQuery(function($){
     var thead = $('#thead'); // element zawierający menu
+    if (thead.position() === undefined) {
+        return;
+    }
     var theadPositionTop = thead.position().top; // sprawdzamy początkową pozycję menu
 
     $(window).scroll(function () { // przypisujemy funkcję do zdarzenia 'scroll'
