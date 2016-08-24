@@ -186,7 +186,7 @@ function seo_init(){ ?>
                 $data = $wpdb->get_results($query);
             ?>
             <table class="wp-list-table widefat fixed striped posts seo-table">
-                <thead id="thead" class="static" style="width: 86%;">
+                <thead id="thead" class="static">
                     <?php write_headlines ($data); ?>
                 </thead>
                 <tbody>

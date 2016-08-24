@@ -60,6 +60,8 @@
     background: white;
     border-right-style: double;
     border-width: 1px;
+    border-right-color: #e5e5e5;
+    width: 86.5%;
 }
 #seo_summary .static {
     position: static;
