@@ -257,7 +257,7 @@ class SEOSummaryLinksManager {
      * @return array
      */
     public function getAllLinkOnPage($postname) {
-        $query = "SELECT s.url, s.ID, 0 as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
+        $query = "SELECT s.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id GROUP BY s.url";
         
         return $this->wpdb->get_results($query, ARRAY_A);
     }
@@ -269,7 +269,7 @@ class SEOSummaryLinksManager {
      * @return array
      */
     public function getAllLinkCallToPage($postname) {
-        $query = "SELECT t.url, 0 as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.post_name = '$postname' and t.ID = s.summary_id ";
+        $query = "SELECT t.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.post_name = '$postname' and t.ID = s.summary_id GROUP BY t.url";
         
         return $this->wpdb->get_results($query, ARRAY_A);
     }

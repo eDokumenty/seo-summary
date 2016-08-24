@@ -1,15 +1,24 @@
-function findOnPage(elid) {
-    var color = prompt("Podaj kolor html HEX", '#c0392b');
+function findOnPage(findUrl, inUrl) {
+    var color = prompt("Podaj kod koloru podświetlenia linku/ów HEX", '#c0392b');
     var url = location.origin + ajaxurl;
             
     var data = {  
         action: 'findOnPage',
         bgColor: color,
-        elid : elid
+        url : findUrl,
+        inUrl : inUrl
     };
     jQuery(function($) {
         $.post(url, data, function( response){  
-           window.open(response.slice(0, -1),'_blank'); 
+           newUrl = response.slice(0, -1); 
+            if (inUrl === newUrl) { 
+                if (confirm("Czy chcesz kolejny link do podświetlenia") === false) {
+                    window.open(response + '?seo_summary', '_blank'); 
+                }
+            } else {
+                alert("Nie można było otworzyć strony!");
+            }
+            
         });
     });
 }

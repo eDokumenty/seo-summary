@@ -24,6 +24,11 @@ class DisplayTestPage {
      */
     protected $xpath = [];
 
+    /**
+     *
+     * @var boolean
+     */
+    protected $newShow = true;
 
     /**
      * 
@@ -31,7 +36,16 @@ class DisplayTestPage {
      * @param string $url Address url to test page
      */
     public function __construct($url) {
+        $oldUrl = get_option('seo-summary-find-on-page', '');
+        
+        if ($url == $oldUrl) {
+            $this->xpath = get_option('seo-summary-find-on-page_style', []);
+            $this->newShow = false;
+        }
+        
         $this->testUrlPage = $url;  
+        
+        
     }
     
     /**
@@ -53,8 +67,15 @@ class DisplayTestPage {
      * @public
      */
     public function init() {
-        add_option(__CLASS__, $url);
-        add_option(__CLASS__.'_style', serialize($this->xpath));
+        if ($this->newShow) {
+            add_option('seo-summary-find-on-page', $this->testUrlPage);
+            add_option('seo-summary-find-on-page_style',$this->xpath);
+            add_option('seo-summary-find-on-page-client', self::getClientIp());
+        } else {
+            //update_option('seo-summary-find-on-page', $this->testUrlPage);
+            update_option('seo-summary-find-on-page_style',$this->xpath);
+        }
+        
     }
     
     /**
@@ -64,33 +85,70 @@ class DisplayTestPage {
      */
     public static function printCss() {
         ob_start();
-        
-        $url = get_option(__CLASS__, false);
-        error_log(print_r($_COOKIE, true));
-        if ($url === FALSE || $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] !== $url ) {
-            return;
-        }
-        echo '<style type="text/css">';
+	header( 'Content-type: text/css' );
         echo "/* Test page autogenerate SEO Summary */ \n";
-        
-        $css = @unserialize(get_option(__CLASS__.'_style'));
+        $url = get_option('seo-summary-find-on-page', 'false');
 
-        if (!is_array($css)) {
-            echo '</style>';
+        if ($url === 'false') {  
             return;
         }
-        delete_option(__CLASS__);
-        delete_option(__CLASS__.'_style');
+        // Only print CSS if this is a stylesheet request
+        if( ! isset( $_GET['seo_summary'] ) || intval( $_GET['seo_summary'] ) !== 1 ) {
+            return;
+	}
+
+  
+        if ( self::getClientIp() != get_option('seo-summary-find-on-page-client')) {
+            return;
+        }
         
        
+        
+        
+        $css =  (get_option('find-on-page_style'));
+        
+        
+        if (!is_array($css)) {
+            exit;
+        }
+        delete_option('seo-summary-find-on-page');
+        delete_option('seo-summary-find-on-page_style');
+        delete_option('seo-summary-find-on-page-client');
         
         foreach ($css as $styl) {
             echo "\n";
             echo $styl['xpath'].' {';
             echo "\n";
-            echo "\tbackground-color: ".$styl['bgColor'];
+            echo "\tbackground-color: ".$styl['bgColor'].";";
+            echo "\npadding: 10px;";
             echo "\n}";
         }
-        echo '</style>';
+        exit;
+    }
+    
+    /**
+     * Get ip client
+     * 
+     * @public
+     * @static
+     * @return string
+     */
+    public static function getClientIp() {
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if(isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if(isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if(isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else
+            $ipaddress = 'UNKNOWN';
+        return $ipaddress;
     }
 }
