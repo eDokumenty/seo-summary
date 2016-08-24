@@ -91,9 +91,7 @@ function queue_my_admin_scripts() {
     // A style available in WP               
     wp_enqueue_style (  'wp-jquery-ui-dialog');
 }
-
-
-
+wp_enqueue_script( 'tablesorter', plugins_url('/js/jquery.tablesorter.js', __FILE__), array( 'jquery' ) );
 
 /*
  * Add plugin to the Wordpress menu
@@ -163,9 +161,6 @@ function write_headlines ($data){
                 }
                 if ( $k == 'post_type' ){
                     echo '<th class="seo_table_th" style="width:8%; padding-right: 50px;"> Typ postu </th>';
-                    echo '<th style="width:6%;"> Ilość słów </th>';
-                    echo '<th style="width:6%;" class="center"> Ilość linków<br> na stronie </th>';
-                    echo '<th style="width:6%;" class="center"> Ilość linków<br> do tej strony </th>';
                 }
             }
         }
@@ -179,13 +174,12 @@ function write_headlines ($data){
 function seo_init(){ ?>
     <div id="seo_summary">
         <h1 class="plugin_title">SEO Summary</h1>
-        <form class="form-plugin" name="formularz" method="get">        
+        <form name="formularz" method="get">        
             <?php
                 $query = "SELECT p.post_title, p.post_name, p.ID, p.post_type, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key IN ('_yoast_wpseo_metadesc', '_yoast_wpseo_title')) WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci', 'faq') AND p.post_status = 'publish' ORDER BY p.post_type ASC, p.post_title ASC";
                 global $wpdb;
                 $data = $wpdb->get_results($query);
             ?>
-            <table class="wp-list-table widefat fixed striped posts seo-table">
                 <thead id="thead" class="static">
                     <?php write_headlines ($data); ?>
                 </thead>

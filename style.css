@@ -14,9 +14,6 @@
 #seo_summary .number_record{
     height: 20px;
 }
-#seo_summary .form-plugin{
-    margin-top: 1vh;
-}
 #seo_summary .post_title{
     font-size: 18px;
     line-height: 1.2;
@@ -68,4 +65,10 @@
 }
 #seo_summary .static {
     position: static;
+}
+#seo_summary .th-width{
+    width: 6%;
+}
+#seo_summary .seo_table_th{
+    cursor: pointer;
 }

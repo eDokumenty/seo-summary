@@ -125,3 +125,6 @@ jQuery(function($){
     });
 
 });
+
+jQuery(function($) {
+});
