@@ -63,6 +63,10 @@ jQuery(function($) {
             });
         });
         
+        $( ".find-on-page" ).click(function(event){
+            alert('test');
+        });
+        
         $("td").click(function(event){
         event.stopPropagation();
             var title = $(this).attr('id');

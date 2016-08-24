@@ -103,7 +103,10 @@ class SEOSummaryLinksManager {
      * @public
      */
     public function update() {
-        if (version_compare('1.1.1', $versionClient, '>=')) {
+        $versionClient = get_option('seo-summary_version', SEO_VERSION);
+
+        //update for version 1.1.1
+        if (version_compare('1.1.1', $versionClient) === 1) {
             $query = "ALTER TABLE `{$this->subTabnam}` ADD `xpath` TEXT NULL AFTER `post_name`;";
             
             $this->wpdb->query($query);
@@ -250,7 +253,7 @@ class SEOSummaryLinksManager {
      * @return array
      */
     public function getAllLinkOnPage($postname) {
-        $query = "SELECT s.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id --GROUP BY s.url";
+        $query = "SELECT s.url, 0 as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
         
         return $this->wpdb->get_results($query, ARRAY_A);
     }
@@ -261,7 +264,7 @@ class SEOSummaryLinksManager {
      * @return array
      */
     public function getAllLinkCallToPage($postname) {
-        $query = "SELECT t.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.post_name = '$postname' and t.ID = s.summary_id --GROUP BY t.url ";
+        $query = "SELECT t.url, 0 as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.post_name = '$postname' and t.ID = s.summary_id ";
         
         return $this->wpdb->get_results($query, ARRAY_A);
     }
