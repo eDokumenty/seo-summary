@@ -84,9 +84,7 @@ class DisplayTestPage {
      * @static
      */
     public static function printCss() {
-        ob_start();
-	header( 'Content-type: text/css' );
-        echo "/* Test page autogenerate SEO Summary */ \n";
+        
         $url = get_option('seo-summary-find-on-page', 'false');
 
         if ($url === 'false') {  
@@ -102,7 +100,9 @@ class DisplayTestPage {
             return;
         }
         
-       
+        ob_start();
+	header( 'Content-type: text/css' );
+        echo "/* Test page autogenerate SEO Summary */ \n";
         
         
         $css =  (get_option('find-on-page_style'));
