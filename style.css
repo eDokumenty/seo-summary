@@ -17,9 +17,6 @@
 #seo_summary .form-plugin{
     margin-top: 1vh;
 }
-#seo_summary .seo-table{
-    width: 98.8%;
-}
 #seo_summary .post_title{
     font-size: 18px;
     line-height: 1.2;
@@ -60,8 +57,9 @@
 #seo_summary .fixeed {
     position: fixed;
     top: 5%;
-    width: 85.4%;
     background: white;
+    border-right-style: double;
+    border-width: 1px;
 }
 #seo_summary .static {
     position: static;

@@ -58,10 +58,7 @@ jQuery(function($) {
 });
 
 
-
-
-
-jQuery((function($){
+jQuery(function($){
     var thead = $('#thead'); // element zawierający menu
     var theadPositionTop = thead.position().top; // sprawdzamy początkową pozycję menu
 
@@ -83,4 +80,4 @@ jQuery((function($){
         }
     });
 
-}));
+});

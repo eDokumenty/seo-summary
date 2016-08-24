@@ -146,10 +146,10 @@ function write_headlines ($data){
                     echo '<th style="width:70%" class="seo_table_th"> SEO </th>';
                 }
                 if ( $k == 'post_type' ){
-                    echo '<th class="seo_table_th" style="width:8%"> Typ postu </th>';
-                    echo '<th style="width:6%"> Ilość słów </th>';
-                    echo '<th style="width:6%" class="center"> Ilość linków<br> na stronie </th>';
-                    echo '<th style="width:6%" class="center"> Ilość linków<br> do tej strony </th>';
+                    echo '<th class="seo_table_th" style="width:8%; padding-right: 50px;"> Typ postu </th>';
+                    echo '<th style="width:6%;"> Ilość słów </th>';
+                    echo '<th style="width:6%;" class="center"> Ilość linków<br> na stronie </th>';
+                    echo '<th style="width:6%;" class="center"> Ilość linków<br> do tej strony </th>';
                 }
             }
         }
