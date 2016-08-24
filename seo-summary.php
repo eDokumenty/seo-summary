@@ -105,14 +105,15 @@ function queue_my_admin_scripts() {
     // A style available in WP               
     wp_enqueue_style (  'wp-jquery-ui-dialog');
 }
+add_action('init', 'add_css');
+add_action( 'admin_enqueue_scripts', 'queue_my_admin_scripts');
 wp_enqueue_script( 'tablesorter', plugins_url('/js/jquery.tablesorter.js', __FILE__), array( 'jquery' ) );
 
 /*
  * Add plugin to the Wordpress menu
  */
 function seo_summary_setup_menu(){
-    add_action('init', 'add_css');
-    add_action( 'admin_enqueue_scripts', 'queue_my_admin_scripts');
+   
 
     $image = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNTAgNTAiIGZpbGw9IiNhMGE1YWEiID4gICAgPHBhdGggc3R5bGU9InRleHQtaW5kZW50OjA7dGV4dC1hbGlnbjpzdGFydDtsaW5lLWhlaWdodDpub3JtYWw7dGV4dC10cmFuc2Zvcm06bm9uZTtibG9jay1wcm9ncmVzc2lvbjp0YjstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOlNhbnMiIGQ9Ik0gMiAxMSBMIDIgMTMgTCAyIDM3IEwgMiAzOSBMIDQgMzkgTCA5IDM5IEwgOSAzNSBMIDYgMzUgTCA2IDE1IEwgOSAxNSBMIDkgMTEgTCA0IDExIEwgMiAxMSB6IE0gNDEgMTEgTCA0MSAxNSBMIDQ0IDE1IEwgNDQgMzUgTCA0MSAzNSBMIDQxIDM5IEwgNDYgMzkgTCA0OCAzOSBMIDQ4IDM3IEwgNDggMTMgTCA0OCAxMSBMIDQ2IDExIEwgNDEgMTEgeiBNIDExIDE3IEwgMTEgMjEgTCAzOSAyMSBMIDM5IDE3IEwgMTEgMTcgeiBNIDExIDIzIEwgMTEgMjcgTCAzNSAyNyBMIDM1IDIzIEwgMTEgMjMgeiBNIDExIDI5IEwgMTEgMzMgTCAzOSAzMyBMIDM5IDI5IEwgMTEgMjkgeiIgY29sb3I9IiMwMDAiIG92ZXJmbG93PSJ2aXNpYmxlIiBmb250LWZhbWlseT0iU2FucyI+PC9wYXRoPjwvc3ZnPg==';
     add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init', $image );
