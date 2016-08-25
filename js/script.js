@@ -99,7 +99,7 @@ jQuery(function($) {
            
             var url = location.origin + ajaxurl;
             $.post(url, data, function( response){  
-               $info.html("<h1>" + title + "</h1>" + response.slice(0, -1));
+               $info.html("<h1 style='line-height: 30px;'>" + title + "</h1>" + response.slice(0, -1));
                 //alert(response)
             });
         });
