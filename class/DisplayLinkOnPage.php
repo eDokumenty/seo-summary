@@ -55,7 +55,6 @@ class DisplayLinkOnPage {
      * @param string $bgColor Color in Hex Backgorund
      */
     public function addXpathToDistinction($xpath, $bgColor = 'red') {
-        error_log('add xpath ' . $xpath);
         $this->xpath[] = [
                             'xpath' =>$xpath, 
                             'bgColor' => $bgColor
@@ -117,7 +116,6 @@ class DisplayLinkOnPage {
         delete_option('seo-summary-find-on-page-client');
         
         foreach ($css as $styl) {
-            error_log('print xpath ' . print_r($styl, true));
             echo "\n";
             echo $styl['xpath'].' {';
             echo "\n";
