@@ -34,70 +34,35 @@ class SEOSummaryLinksContent {
      */
     private $post_name;
     
+    /**
+     *
+     * @var string
+     */
+    private $xpath;
     
     /**
      * 
      * @public
-     * @return integer
-     */
-    public function getId(){
-        return $this->ID;
-    }
-    
-    /**
-     * 
-     * @public
-     * @param integer $id
-     * @return \SEOSummaryLinksContent
-     */
-    public function setId($id){
-        $this->ID = intval($id);
-        
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return integer
-     */
-    public function getSummaryId() {
-        return $this->summary_id;
-    }
-    
-    /**
-     * 
-     * @param integer $id
-     * @return \SEOSummaryLinksContent
-     */
-    public function setSummaryId($id) {
-        $this->summary_id = $id;
-        
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    public function getUrl() {
-        return $this->url;
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    public function getPostName() {
-        return $this->post_name;
-    }
-    
-    /**
-     * 
-     * @public
+     * @global wpdb $wpdb
+     * @param integer|null $id
+     * @param integer|null $summary_id
      * @param string $url
-     * @return \SEOSummaryLinksContent
+     * @param string $xpath
      */
-    public function setUrl($url) {
+    public function __construct($id, $summary_id, $url, $xpath) {
+        if (is_null($id)) {
+            $this->ID = null;
+        } else {
+            $this->ID = intval($id);
+        }
+        
+        if (is_null($summary_id)) {
+            $this->summary_id = null;
+        } else {
+            $this->summary_id = intval($summary_id);
+        } 
+       
+        
         $this->url = $url;
         
         $path = explode('/', $url);
@@ -122,7 +87,67 @@ class SEOSummaryLinksContent {
         }
         
         $this->post_name = $post_name;
+        $this->xpath = $xpath;
+    }
+    
+    /**
+     * 
+     * @public
+     * @return integer
+     */
+    public function getId(){
+        return $this->ID;
+    }
+
+    /**
+     * 
+     * @public
+     * @return integer
+     */
+    public function getSummaryId() {
+        return $this->summary_id;
+    }
+    
+    /**
+     * 
+     * @public
+     * @param integer $summary_id 
+     * @return \SEOSummaryLinksContent
+     * @throws Exception
+     */
+    public function setSummaryId($summary_id) {
+        if (!is_null($this->summary_id) ){
+            throw new Exception(__CLASS__.' is set summary_ID');
+        }
+        $this->summary_id = intval($summary_id);
         
         return $this;
+    }
+    
+    /**
+     * 
+     * @public
+     * @return string
+     */
+    public function getUrl() {
+        return $this->url;
+    }
+    
+    /**
+     * 
+     * @public
+     * @return string
+     */
+    public function getPostName() {
+        return $this->post_name;
+    }
+
+    /**
+     * 
+     * @public
+     * @return string
+     */
+    public function getXPath() {
+        return $this->xpath;
     }
 }

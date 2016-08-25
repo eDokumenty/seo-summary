@@ -47,69 +47,20 @@ class SEOSummaryLinks {
     /**
      * 
      * @public
-     * @return integer
-     */
-    public function getId(){
-        return $this->ID;
-    }
-    
-    /**
-     * 
-     * @public
-     * @param integer $id
-     * @return \SEOSummaryLinks
-     */
-    public function setId($id){
-        $this->ID = intval($id);
-        
-        return $this;
-    }
-    
-    /**
-     * @public
-     * @return string
-     */
-    public function getSitemap() {
-        return $this->sitemap;
-    }
-    
-    /**
-     * 
-     * @public
+     * @global wpdb $wpdb
+     * @param integer|null $id
      * @param string $sitemap
-     * @return \SEOSummaryLinks
+     * @param string $url
+     * @param integer $countWors
      */
-    public function setSitemap($sitemap) {
+    public function __construct($id, $sitemap, $url, $countWors) {
+        if (is_null($id)) {
+            $this->ID = null;
+        } else {
+             $this->ID = intval($id);
+        }
         
         $this->sitemap = str_replace([home_url(), '-sitemap.xml', 'http://edokumenty.eu/'], '', $sitemap);
-        
-        return $this;
-    }
-    
-    
-    /**
-     * 
-     * @return string
-     */
-    public function getUrl() {
-        return $this->url;
-    }
-    
-    /**
-     * 
-     * @return string
-     */
-    public function getPostName() {
-        return $this->post_name;
-    }
-    
-    /**
-     * 
-     * @public
-     * @param string $url
-     * @return \SEOSummaryLinks
-     */
-    public function setUrl($url) {
         $this->url = $url;
         
         $path = explode('/', $url);
@@ -134,10 +85,44 @@ class SEOSummaryLinks {
         }
         
         $this->post_name = $post_name;
-        
-        return $this;
+        $this->count_words = intval($countWors);
     }
     
+    /**
+     * 
+     * @public
+     * @return integer
+     */
+    public function getId(){
+        return $this->ID;
+    }
+
+    /**
+     * @public
+     * @return string
+     */
+    public function getSitemap() {
+        return $this->sitemap;
+    }
+
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getUrl() {
+        return $this->url;
+    }
+    
+    /**
+     * 
+     * @return string
+     */
+    public function getPostName() {
+        return $this->post_name;
+    }
+    
+ 
     /**
      * 
      * @public
@@ -166,17 +151,5 @@ class SEOSummaryLinks {
      */
     public function getCount_words() {
         return $this->count_words;
-    }
-    
-    /**
-     * 
-     * @public
-     * @param integer $count_words
-     * @return \SEOSummaryLinks
-     */
-    public function setCount_words($count_words) {
-        $this->count_words = $count_words;
-        
-        return $this;
     }
 }

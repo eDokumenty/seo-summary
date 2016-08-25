@@ -2,20 +2,23 @@
 /*
  * Plugin Name: SEO Summary
  * Author: Klaudia Wasilewska & Piotr Kuźnik
- * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca aktualny wygląd w wyszukiwarce Google
- * Version: 1.1.0
- */
+ * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca ich aktualny wygląd w wyszukiwarce Google
+ * Version: 1.1.1
+*/
+
 
 /**
  * @var string
  */
 define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
+define('SEO_VERSION', '1.1.1');
 
 require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksContent.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
-
+require_once PLUGIN_SEO_DIR.'/class/DisplayLinkOnPage.php';
+require_once PLUGIN_SEO_DIR.'/wp_ajax.php';
 
 /**
  * Hook activation plugin
@@ -23,6 +26,7 @@ require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
 register_activation_hook(__FILE__, function() {
     $seo = new SEOSummaryLinksManager();
     $seo->install();
+    $seo->update();
 });
 
 /**
@@ -32,6 +36,34 @@ register_deactivation_hook(__FILE__, function() {
     $seo = new SEOSummaryLinksManager();
     $seo->uninstall();
 });
+
+
+add_action( 'wp_enqueue_scripts', function() {
+    $url = home_url();
+
+    if ( is_ssl() ) {
+            $url = home_url( '/', 'https' );
+    }
+
+    if (isset($_GET['seo_summary'])) {
+        wp_register_style( 'seo-summary-find-on-page', add_query_arg( array( 'seo_summary' => 1 ), $url ) );
+        wp_enqueue_style( 'seo-summary-find-on-page' );
+    }
+}, 99 );
+
+
+/**
+ * Hook update plugin
+ */
+add_action('plugins_loaded', function() {
+    DisplayLinkOnPage::printCss();
+    
+    
+    $seo = new SEOSummaryLinksManager();
+    $seo->update();
+});
+
+
 
 /**
  * Self-update hook
@@ -54,10 +86,6 @@ function add_css (){
     wp_register_style('seo-summary', plugins_url('/style.css', __FILE__));
     wp_enqueue_style('seo-summary');
 }
-add_action('init', 'add_css');
-
-
-add_action( 'admin_enqueue_scripts', 'queue_my_admin_scripts');
 
 function queue_my_admin_scripts() {
      //ustalamy odpowiedni protokół  
@@ -76,81 +104,17 @@ function queue_my_admin_scripts() {
                         array('jquery-ui-dialog')); // dependencies
     // A style available in WP               
     wp_enqueue_style (  'wp-jquery-ui-dialog');
-    
 }
-
-
-add_action('wp_ajax_get_text', function() {
-    $post = $_POST['post_name'];
-    
-    $seo = new SEOSummaryLinksManager();
-    $url = $seo->getUrl($post);
-    
-    $text = CrawlPages::getTextSimplePage($url);
-    
-    ?>
-<pre>
-    <?php echo $text; ?>
-</pre>
-    <?php
-    return true;
-});
-
-add_action('wp_ajax_get_inLink', function() {
-   $post = $_POST['post_name']; 
-   $seo = new SEOSummaryLinksManager();
-   $data = $seo->getAllLinkOnPage($post);
-   ?>
-
-    <?php
-        $lp = 1;
-        echo '<table class="wp-list-table widefat fixed striped posts">';
-        foreach ($data as $row){
-            echo '<tr><td style="width:50px; text-align: center;">'.$lp++.'</td><td>'.$row['url'].'</td></tr>';
-        }
-        echo '</table>';
-    ?>
-
-<!--<pre>
-    <?php
-        //print_r($data);
-    ?>
-</pre>-->
-
-    <?php
-    return true;
-});
-
-add_action('wp_ajax_get_outLink', function(){
-    $post = $_POST['post_name'];
-    
-    $seo = new SEOSummaryLinksManager();
-    
-    $data = $seo->getAllLinkCallToPage($post);
-   ?>
-
-<?php
-        echo $lp = 1;
-        echo '<table class="wp-list-table widefat fixed striped posts">';
-        foreach ($data as $row){
-            echo '<tr><td style="width:50px;text-align: center;">'.$lp++.'</td><td>'.$row['url'].'</td></tr>';
-        }
-        echo '</table>';
-    ?>
-
-<!--<pre>
-    <?php
-        //print_r($data);
-    ?>
-</pre>-->
-<?php
-    return true;
-});
+add_action('init', 'add_css');
+add_action( 'admin_enqueue_scripts', 'queue_my_admin_scripts');
+wp_enqueue_script( 'tablesorter', plugins_url('/js/jquery.tablesorter.js', __FILE__), array( 'jquery' ) );
 
 /*
  * Add plugin to the Wordpress menu
  */
 function seo_summary_setup_menu(){
+   
+
     $image = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2ZXJzaW9uPSIxLjAiIHg9IjBweCIgeT0iMHB4IiB2aWV3Qm94PSIwIDAgNTAgNTAiIGZpbGw9IiNhMGE1YWEiID4gICAgPHBhdGggc3R5bGU9InRleHQtaW5kZW50OjA7dGV4dC1hbGlnbjpzdGFydDtsaW5lLWhlaWdodDpub3JtYWw7dGV4dC10cmFuc2Zvcm06bm9uZTtibG9jay1wcm9ncmVzc2lvbjp0YjstaW5rc2NhcGUtZm9udC1zcGVjaWZpY2F0aW9uOlNhbnMiIGQ9Ik0gMiAxMSBMIDIgMTMgTCAyIDM3IEwgMiAzOSBMIDQgMzkgTCA5IDM5IEwgOSAzNSBMIDYgMzUgTCA2IDE1IEwgOSAxNSBMIDkgMTEgTCA0IDExIEwgMiAxMSB6IE0gNDEgMTEgTCA0MSAxNSBMIDQ0IDE1IEwgNDQgMzUgTCA0MSAzNSBMIDQxIDM5IEwgNDYgMzkgTCA0OCAzOSBMIDQ4IDM3IEwgNDggMTMgTCA0OCAxMSBMIDQ2IDExIEwgNDEgMTEgeiBNIDExIDE3IEwgMTEgMjEgTCAzOSAyMSBMIDM5IDE3IEwgMTEgMTcgeiBNIDExIDIzIEwgMTEgMjcgTCAzNSAyNyBMIDM1IDIzIEwgMTEgMjMgeiBNIDExIDI5IEwgMTEgMzMgTCAzOSAzMyBMIDM5IDI5IEwgMTEgMjkgeiIgY29sb3I9IiMwMDAiIG92ZXJmbG93PSJ2aXNpYmxlIiBmb250LWZhbWlseT0iU2FucyI+PC9wYXRoPjwvc3ZnPg==';
     add_menu_page( 'SEO Summary', 'SEO Summary', 'manage_options', 'seo-summary', 'seo_init', $image );
 
@@ -161,7 +125,7 @@ function seo_summary_setup_menu(){
         <?php
         $url = get_bloginfo('url').'/sitemap_index.xml';
         
-        if( @file_get_contents($url) == true ){
+        if( @file_get_contents($url) == true && home_url() !== 'http://localhost/ed' ){
             $url = get_bloginfo('url').'/sitemap_index.xml';
         } else {
             $url = 'http://edokumenty.eu/sitemap_index.xml';
@@ -176,7 +140,6 @@ function seo_summary_setup_menu(){
             $seoManager = new SEOSummaryLinksManager();
             $crawl->loadManager($seoManager);
             $crawl->crawl();
-            
         }else {  
             include PLUGIN_SEO_DIR.'templates/crawl-form.php';
         } 
@@ -207,28 +170,21 @@ function numbers_of_items($ile){
      */
 }
 function write_headlines ($data){
-    echo '<tr>';
-    /*  <td class="checkbox-col">
-     *      <input id="all" class="checkbox-td all" type="checkbox" onclick="Zaznacz()">
-     *  </td>
-     */
     $i = 0;
     foreach( $data as $row ){
         foreach ( $row as $k => $v ){
             if( $i < 1 ){
                 if ( $k == 'post_title' ){
-                    echo '<th class="seo_table_th"> SEO </th>';
+                    echo '<th style="width:70%" class="seo_table_th"> SEO </th>';
                 }
                 if ( $k == 'post_type' ){
-                    echo '<th class="seo_table_th"> Typ postu </th>';
-                    echo '<th> Ilość słów </th>';
-                    echo '<th class="center"> Ilość linków<br> na stronie </th>';
-                    echo '<th class="center"> Ilość linków<br> do tej strony </th>';
+                    echo '<th class="seo_table_th" style="width:8%; padding-right: 50px;"> Typ postu </th>';
+                    echo '<th class="th-width seo_table_th"> Ilość słów </th>';
+                    echo '<th class="th-width seo_table_th" class="center"> Ilość linków<br> na stronie </th>';
+                    echo '<th class="th-width seo_table_th" class="center"> Ilość linków<br> do tej strony </th>';
                 }
             }
         }
-       
-        echo '</tr>';
         $i++;
     }
 }
@@ -239,13 +195,13 @@ function write_headlines ($data){
 function seo_init(){ ?>
     <div id="seo_summary">
         <h1 class="plugin_title">SEO Summary</h1>
-        <form class="form-plugin" name="formularz" method="get">        
+        <form name="formularz" method="get">        
             <?php
                 $query = "SELECT p.post_title, p.post_name, p.ID, p.post_type, m.meta_key, m.meta_value FROM wp_posts AS p left join wp_postmeta AS m on ( p.ID = m.post_id and m.meta_key IN ('_yoast_wpseo_metadesc', '_yoast_wpseo_title')) WHERE p.post_type in ('post', 'page', 'rozwiazania', 'klienci', 'faq') AND p.post_status = 'publish' ORDER BY p.post_type ASC, p.post_title ASC";
                 global $wpdb;
                 $data = $wpdb->get_results($query);
             ?>
-            <table class="wp-list-table widefat fixed striped posts seo-table">
+            <table id="sortTable" class="wp-list-table widefat fixed striped posts seo-table">
                 <thead id="thead" class="static">
                     <?php write_headlines ($data); ?>
                 </thead>
@@ -254,7 +210,6 @@ function seo_init(){ ?>
                         /*
                          * It writes row in the table
                          */
-                    
                         $seoManager = new SEOSummaryLinksManager();
                         $title = '';
                         $a = [];
@@ -278,11 +233,6 @@ function seo_init(){ ?>
                         $a[] = $r;
                         $ile = 0;
                         foreach ($a as $row){
-                            
-                            /*
-                             * <td><input id="p' . $ile . '" type="checkbox"></td>
-                             */
-                            
                             echo '<tr>'
                                 . '<td class="google-link">';
                                 if ( array_key_exists('_yoast_wpseo_title', $row) ){

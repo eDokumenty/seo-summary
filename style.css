@@ -14,12 +14,6 @@
 #seo_summary .number_record{
     height: 20px;
 }
-#seo_summary .form-plugin{
-    margin-top: 1vh;
-}
-#seo_summary .seo-table{
-    width: 98.8%;
-}
 #seo_summary .post_title{
     font-size: 18px;
     line-height: 1.2;
@@ -42,13 +36,16 @@
 }
 #seo_summary ._yoast_wpseo_metadesc{
     color: #545454;
-    width: 75%;
+    width: 600px;
 }
 #seo_summary .google-link{
     font-family: arial, sans-serif;
 }
 #seo_summary table.fixed{
     table-layout: auto;
+}
+#seo_summary table {
+    width: 98.4%;
 }
 #seo_summary .center{
     text-align: center;
@@ -60,9 +57,18 @@
 #seo_summary .fixeed {
     position: fixed;
     top: 5%;
-    width: 85.4%;
     background: white;
+    border-right-style: double;
+    border-width: 1px;
+    border-right-color: #e5e5e5;
+    width: 85.1%;
 }
 #seo_summary .static {
     position: static;
+}
+#seo_summary .th-width{
+    width: 6%;
+}
+#seo_summary .seo_table_th{
+    cursor: pointer;
 }

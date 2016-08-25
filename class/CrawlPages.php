@@ -81,10 +81,10 @@ class CrawlPages {
     }
     
     public function crawl($clearOld = true) {
+        $startTime = $this->getMicrotime();
         if ($clearOld) {
             $this->seoManager->truncate();
         }
-        echo "<code>START</code>";
         foreach ($this->sitemapLocation as $url) {
             $object = $this->getContainsSiteMapXML($url);
                        
@@ -97,25 +97,21 @@ class CrawlPages {
                     continue;
                 }
 
-                $seo = new SEOSummaryLinks();
-                $seo->setSitemap($url)
-                        ->setUrl($pageUrl)
-                        ->setContent($contentUrl)
-                        ->setCount_words($data['cwords']);
-
+                $seo = new SEOSummaryLinks(null,
+                                            $url, 
+                                            $pageUrl,
+                                            $data['cwords']);
+                $seo->setContent($contentUrl);
                 $this->seoManager->persist($seo);
             }
         }
+        
         ?>
-        <code>END.</code>
         </br>
         </br>
         <p>Przeczytano : <?php echo $this->page; ?> stron/y</p>
-        </br>
         <p>Znaleziono w nich : <?php echo $this->urls; ?> adresów URL.</p>
-        </br>
         <p>Słów : <?php echo $this->words; ?></p>
-        </br>
         <p>Błędów( <?php echo count($this->errors); ?> ) :</p>
         <ul>
             <?php
@@ -127,9 +123,26 @@ class CrawlPages {
         </ul>
         <?php
         $this->seoManager->flush();
-        echo "</br></br>Dane zostały zapisane";
+        echo "</br></br>Dane zostały zapisane..";
+        
+        $endTime = $this->getMicrotime();
+        $timeExecute = $endTime - $startTime;
+        
+        $minuty = floor($timeExecute/60);
+        $sekundy = floor($timeExecute - $minuty*60);
+        
+        echo '<p>Operacje wykonano w czasie: '.$timeExecute.' sekund tj. ok.: '. $minuty .' minut '. $sekundy .' sekund</p>';
     }
     
+    /**
+     * 
+     * @protected
+     * @return float
+     */
+    protected function getMicrotime() {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
+    }
     /**
      * 
      * @param string $sitemapUrl
@@ -149,7 +162,7 @@ class CrawlPages {
     public function crawlSimplePage($pageUrl) {
         $this->count++;
         $url = [];
-        echo "<code>&nbsp;";
+        echo "<code>";
         $handle = curl_init($pageUrl);
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
         $html = curl_exec($handle);
@@ -176,8 +189,25 @@ class CrawlPages {
                                 continue;
                             }
                             
-                            $seo = new SEOSummaryLinksContent();
-                            $seo->setUrl($attribute->value);
+                            //Remove empty href
+                            if (empty($attribute->value)) {
+                                continue;
+                            }
+                            
+                            $home_url = (home_url() == 'http://localhost/ed') ? 'http://edokumenty.eu' : ((empty(home_url())? 'http://edokumenty.eu' : home_url() ));
+                            $path_url = rtrim($attribute->value, "/");
+                            $pattern = '/((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*/';
+                            if (!preg_match($pattern, $path_url)) {
+                               continue;
+                            }
+                            
+                            $xpath = $element->getNodePath();
+                            
+                            $seo = new SEOSummaryLinksContent(null,
+                                                                null,
+                                                                $path_url,
+                                                                $xpath);
+                           
                             $url[] = $seo;
                             
                             $this->urls++;
