@@ -187,14 +187,14 @@ class CrawlPages {
                             
                             //Remove empty href
                             if (empty($attribute->value)) {
-                                //continue;
+                                continue;
                             }
                             
                             $home_url = (home_url() == 'http://localhost/ed') ? 'http://edokumenty.eu' : ((empty(home_url())? 'http://edokumenty.eu' : home_url() ));
                             $path_url = rtrim($attribute->value, "/");
                             $pattern = '/((http|https)\:\/\/)?[a-zA-Z0-9\.\/\?\:@\-_=#]+\.([a-zA-Z0-9\&\.\/\?\:@\-_=#])*/';
                             if (!preg_match($pattern, $path_url)) {
-                               // continue;
+                               continue;
                             }
                             
                             $xpath = $element->getNodePath();

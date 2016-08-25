@@ -13,7 +13,7 @@ add_action('wp_ajax_findOnPage', function () {
     $xpath = 'a[href^="'.$url.'"]';
     
     
-    $test = new DisplayTestPage($openUrl);
+    $test = new DisplayLinkOnPage($openUrl);
     $test->addXpathToDistinction($xpath, $bgColor);
     
     

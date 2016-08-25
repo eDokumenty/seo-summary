@@ -17,7 +17,7 @@ require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksContent.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinksManager.php';
-require_once PLUGIN_SEO_DIR.'/class/DisplayTestPage.php';
+require_once PLUGIN_SEO_DIR.'/class/DisplayLinkOnPage.php';
 require_once PLUGIN_SEO_DIR.'/wp_ajax.php';
 
 /**
@@ -56,7 +56,7 @@ add_action( 'wp_enqueue_scripts', function() {
  * Hook update plugin
  */
 add_action('plugins_loaded', function() {
-    DisplayTestPage::printCss();
+    DisplayLinkOnPage::printCss();
     
     
     $seo = new SEOSummaryLinksManager();

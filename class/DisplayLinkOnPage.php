@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of DisplayTestPage
+ * Description of DisplayLinkOnPage
  * 
  * @package SEO Summary
  * @since 
@@ -10,7 +10,7 @@
  * @license gpl
  * @copyright (c) eDokumenty Sp. z o.o
  */
-class DisplayTestPage {
+class DisplayLinkOnPage {
     
     /**
      *
@@ -55,6 +55,7 @@ class DisplayTestPage {
      * @param string $bgColor Color in Hex Backgorund
      */
     public function addXpathToDistinction($xpath, $bgColor = 'red') {
+        error_log('add xpath ' . $xpath);
         $this->xpath[] = [
                             'xpath' =>$xpath, 
                             'bgColor' => $bgColor
@@ -105,7 +106,7 @@ class DisplayTestPage {
         echo "/* Test page autogenerate SEO Summary */ \n";
         
         
-        $css =  (get_option('find-on-page_style'));
+        $css =  (get_option('seo-summary-find-on-page_style'));
         
         
         if (!is_array($css)) {
@@ -116,6 +117,7 @@ class DisplayTestPage {
         delete_option('seo-summary-find-on-page-client');
         
         foreach ($css as $styl) {
+            error_log('print xpath ' . print_r($styl, true));
             echo "\n";
             echo $styl['xpath'].' {';
             echo "\n";
