@@ -13,7 +13,7 @@ function findOnPage(findUrl, inUrl) {
            newUrl = response.slice(0, -1); 
             if (inUrl === newUrl) { 
                 //if (confirm("Czy chcesz kolejny link do podświetlenia") === false) {
-                    window.open(response + '?seo_summary', '_blank'); 
+                    window.open(newUrl + '?seo_summary', '_blank'); 
                 //}
             } else {
                 alert("Nie można było otworzyć strony!");

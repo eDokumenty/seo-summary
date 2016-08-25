@@ -127,7 +127,11 @@ class CrawlPages {
         
         $endTime = $this->getMicrotime();
         $timeExecute = $endTime - $startTime;
-        echo '<p>Operacje wykonano w czasie: '.$timeExecute.' sekund</p>';
+        
+        $minuty = floor($timeExecute/60);
+        $sekundy = floor($timeExecute - $minuty*60);
+        
+        echo '<p>Operacje wykonano w czasie: '.$timeExecute.' sekund tj. ok.: '. $minuty .' minut '. $sekundy .' sekund</p>';
     }
     
     /**
