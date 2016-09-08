@@ -221,9 +221,15 @@ class SEOSummaryLinksManager {
      * @return string
      */
     public function countAllLinkOnPage($postname) {
-        $query = "SELECT count(*) FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id ";
+        $query = "SELECT s.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE t.post_name = '$postname' and t.ID = s.summary_id GROUP BY s.url";
         
-        return $this->wpdb->get_var($query);
+        $data = $this->wpdb->get_results($query, ARRAY_A);
+        
+        $count = 0;
+        foreach ($data as $row){
+            $count++;
+        }
+        return $count;
     }
     
     /**
@@ -233,8 +239,15 @@ class SEOSummaryLinksManager {
      * @return string
      */
     public function countAllLinkCallToPage($postname) {
-        $query = "SELECT count(*) FROM {$this->subTabnam} WHERE post_name = '$postname'";
-        return $this->wpdb->get_var($query);
+        $query = "SELECT t.url, count(*) as replay FROM {$this->subTabnam} as s, {$this->tabnam} as t WHERE s.post_name = '$postname' and t.ID = s.summary_id GROUP BY t.url";
+        
+        $data = $this->wpdb->get_results($query, ARRAY_A);
+        
+        $count = 0;
+        foreach ($data as $row){
+            $count++;
+        }
+        return $count;
     }
     
     /**

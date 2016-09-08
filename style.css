@@ -72,3 +72,6 @@
 #seo_summary .seo_table_th{
     cursor: pointer;
 }
+#seo_summary .open-modal{
+    cursor: pointer;
+}

@@ -29,7 +29,7 @@ add_action('wp_ajax_findOnPage', function () {
  */
 add_action('wp_ajax_crawl_now', function (){
 
-    $url = get_bloginfo('url').'/sitemap_index.xml';
+    //$url = get_bloginfo('url').'/sitemap_index.xml';
 
     if( @file_get_contents($url) == true ){
         $url = get_bloginfo('url').'/sitemap_index.xml';
