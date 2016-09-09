@@ -1,7 +1,7 @@
 #seo_summary .number-items{
     float: right;
-    margin-right: 1.6%;
     display: inline-block;
+    height: 20px;
 }
 #seo_summary .plugin_title{
     font-size: 23px;
@@ -10,9 +10,6 @@
     padding: 9px 15px 4px 0;
     line-height: 29px;
     color: #444;
-}
-#seo_summary .number_record{
-    height: 20px;
 }
 #seo_summary .post_title{
     font-size: 18px;
@@ -44,9 +41,6 @@
 #seo_summary table.fixed{
     table-layout: auto;
 }
-#seo_summary table {
-    width: 98.4%;
-}
 #seo_summary .center{
     text-align: center;
 }
@@ -61,7 +55,6 @@
     border-right-style: double;
     border-width: 1px;
     border-right-color: #e5e5e5;
-    width: 85.1%;
 }
 #seo_summary .static {
     position: static;

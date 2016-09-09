@@ -160,7 +160,7 @@ function numbers_of_items($ile){
     $string = "$ile";
     $ostatnia = $string[strlen($string)-1];
     
-    echo '<div class="number-items tablenav number_record">';
+    echo '<div class="number-items tablenav">';
     if($ile == 1){
         echo $ile . ' element';
     }else if($ostatnia >1 && $ostatnia <5){
