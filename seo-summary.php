@@ -1,9 +1,12 @@
 <?php
 /*
  * Plugin Name: SEO Summary
- * Author: Klaudia Wasilewska & Piotr Kuźnik
+ * Version: 1.2.0
  * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca ich aktualny wygląd w wyszukiwarce Google
- * Version: 1.1.1
+ * Author: Klaudia Wasilewska & Piotr Kuźnik
+ * Author URI: http://edokumenty.eu/
+ * License: GPLv2 or later
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
 
