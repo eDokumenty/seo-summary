@@ -136,5 +136,7 @@ jQuery(function($){
 });
 
 jQuery(function($) {
-    $("#sortTable").tablesorter();
+    if ( $('#sortTable').length ) { //check exists
+        $("#sortTable").tablesorter();
+    }
 });
