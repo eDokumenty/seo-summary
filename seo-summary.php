@@ -14,7 +14,7 @@
  * @var string
  */
 define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
-define('SEO_VERSION', '1.1.1');
+define('SEO_VERSION', '1.2.1');
 
 require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
