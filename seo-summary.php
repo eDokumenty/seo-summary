@@ -1,7 +1,7 @@
 <?php
 /*
  * Plugin Name: SEO Summary
- * Version: 1.2.1
+ * Version: 1.2.2
  * Description: Wtyczka kontrolująca ilość linków na stronie/poście i pokazująca ich aktualny wygląd w wyszukiwarce Google
  * Author: Klaudia Wasilewska & Piotr Kuźnik
  * Author URI: http://edokumenty.eu/
@@ -14,7 +14,7 @@
  * @var string
  */
 define('PLUGIN_SEO_DIR', plugin_dir_path(__FILE__));
-define('SEO_VERSION', '1.2.1');
+define('SEO_VERSION', '1.2.2');
 
 require_once PLUGIN_SEO_DIR.'/class/CrawlPages.php';
 require_once PLUGIN_SEO_DIR.'/class/SEOSummaryLinks.php';
